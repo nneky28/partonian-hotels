@@ -245,57 +245,58 @@ export const BookingModal = ({
 
     setIsSubmitting(true);
 
-    try {
-      const response = await fetch('/api/booking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          branchName,
-          checkIn: checkInDate?.toISOString(),
-          checkOut: checkOutDate?.toISOString(),
-          roomType,
-          guests,
-          nights: numberOfNights,
-          totalPrice,
-          fullName,
-          email,
-          phone,
-        }),
-      });
+    // try {
+    //   const response = await fetch('/api/booking', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       branchName,
+    //       checkIn: checkInDate?.toISOString(),
+    //       checkOut: checkOutDate?.toISOString(),
+    //       roomType,
+    //       guests,
+    //       nights: numberOfNights,
+    //       totalPrice,
+    //       fullName,
+    //       email,
+    //       phone,
+    //     }),
+    //   });
 
-      const data = await response.json();
+    //   const data = await response.json();
 
-      if (data.success) {
-        toast({
-          title: "Booking Submitted!",
-          description: data.message,
-          status: "success",
-          duration: 7000,
-          isClosable: true,
-        });
-        handleClose();
-      } else {
-        toast({
-          title: "Submission Failed",
-          description: data.message,
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to submit booking. Please try again.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    //   if (data.success) {
+    //     toast({
+    //       title: "Booking Submitted!",
+    //       description: data.message,
+    //       status: "success",
+    //       duration: 7000,
+    //       isClosable: true,
+    //     });
+    //     handleClose();
+    //   } else {
+    //     toast({
+    //       title: "Submission Failed",
+    //       description: data.message,
+    //       status: "error",
+    //       duration: 5000,
+    //       isClosable: true,
+    //     });
+    //   }
+    // } catch (error) {
+    //   toast({
+    //     title: "Error",
+    //     description: "Failed to submit booking. Please try again.",
+    //     status: "error",
+    //     duration: 5000,
+    //     isClosable: true,
+    //   });
+    // } finally {
+    //   setIsSubmitting(false);
+    // }
+
   };
 
   // Reset form on close
