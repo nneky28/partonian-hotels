@@ -3,12 +3,11 @@
 import { useState } from 'react';
 import { Box } from '@chakra-ui/react';
 import { Header } from '@/components/UIs/Header';
-import { BranchPageHero } from '@/components/UIs/BranchPageHero';
 import { BranchInfoSection } from '@/components/UIs/BranchInfoSection';
 import { RoomsSection } from '@/components/UIs/RoomsSection';
 import { Footer } from '@/components/UIs/footer';
 import { BookingModal } from '@/components/UIs/BookingModal';
-import { MdPool, MdWifi, MdFitnessCenter, MdLocalParking, MdTheaters, MdShoppingBag, MdSpa, MdKingBed, MdVisibility, MdBalcony, MdBreakfastDining, MdLocalBar } from 'react-icons/md';
+import { MdPool, MdWifi, MdLocalParking, MdTheaters, MdShoppingBag, MdKingBed, MdVisibility, MdBalcony, MdBreakfastDining, MdLocalBar, MdHome, MdRoomService, MdBeachAccess, MdChurch } from 'react-icons/md';
 import { footerSections } from '@/utils/footerSection';
 import { BranchHeroSlider } from '@/components/UIs/BranchHeroSlider';
 
@@ -19,12 +18,6 @@ const navLinks = [
   { label: 'Awka', href: '/branches/awka' },
 ];
 
-const photos = {
-  main: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691611/PI_Deluxe_coyn3r.jpg',
-  lounge: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691603/PI_Executive_Suite_f0oorc.jpg',
-  dining: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691601/IMG_20220704_113706_smqueb.jpg',
-  pool: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691596/PI_Alcove_el0weu.jpg',
-};
 
 const rooms = [
   {
@@ -70,20 +63,17 @@ const rooms = [
 const heroSlides = [
   {
     image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691611/PI_Deluxe_coyn3r.jpg',
-    title: 'Ikate Luxury',
-    subtitle: 'Serene Elegance',
+    title: 'Parktonian Ikate',
     description: 'A tranquil retreat in Lagos\' most exclusive neighborhood, designed for those who seek privacy and bespoke hospitality.',
   },
   {
     image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691603/PI_Executive_Suite_f0oorc.jpg',
     title: 'Contemporary Design',
-    subtitle: 'Modern Comfort',
     description: 'Experience contemporary luxury with rooftop infinity pool and premium spa services crafted for your ultimate relaxation.',
   },
   {
     image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691530/IMG_20220704_113928_ea83sl.jpg',
     title: 'Rooftop Paradise',
-    subtitle: 'Sky-High Luxury',
     description: 'Unwind at our stunning rooftop pool with panoramic city views and exclusive cabana service.',
   },
 ];
@@ -109,25 +99,28 @@ export default function IkateBranchPage() {
 
         <BranchInfoSection
           subtitle="Serene Elegance"
-          title="Ikate Luxury<br/>Experience"
+          title="The Exclusive Parktonian <br/> Hotel Ikate"
           description={[
-            "A serene escape designed for the discerning traveler seeking privacy and bespoke hospitality experiences in the heart of Lagos' most exclusive neighborhood.",
-            "Experience contemporary luxury with our rooftop infinity pool, premium spa services, and personalized concierge. Every moment at Parktonian Ikate is crafted for your ultimate comfort.",
+            "A tranquil retreat in the heart of Lagos' most exclusive neighborhood, designed for those who seek privacy and bespoke hospitality.",
+            "Parktonian Hotel Ikate is located along the Lekki-Epe Expressway by the prominent Chisco Busstop. It is a favourite destination for individuals who desire a serene environment to relax and refresh.",
+            "Our exclusive lounge is a great place to enjoy private moments with special friends. Indulge in an exquisite dining experience, and enjoy our luxurious rooms designed to give you maximum comfort during your stay.",
+            "Every moment at Parktonian Ikate is crafted for exclusivity and ultimate comfort. Visit us today for a luxurious experience."
           ]}
           stats={[
             { value: '40+', label: 'Premium<br/>Rooms' },
             { value: '100%', label: 'Guest<br/>Satisfaction' },
           ]}
           amenities={[
-            { icon: MdPool, label: 'Rooftop Pool' },
-            { icon: MdWifi, label: 'High-Speed Wi-Fi' },
-            { icon: MdFitnessCenter, label: 'Modern Gym' },
-            { icon: MdLocalParking, label: 'Valet Parking' },
+            { icon: MdHome, label: 'Luxurious Rooms' },
+            { icon: MdBalcony, label: 'Executive Lounge' },
+            { icon: MdRoomService, label: 'Bespoke Service' },
+            { icon: MdLocalParking, label: 'Secure Parking' },
           ]}
           attractions={[
             { icon: MdTheaters, name: 'Genesis Cinemas', distance: '3 MIN DRIVE' },
             { icon: MdShoppingBag, name: 'Circle Mall', distance: '5 MIN DRIVE' },
-            { icon: MdSpa, name: 'Wellness Spa', distance: '7 MIN DRIVE' },
+            { icon: MdBeachAccess, name: 'Elegushi Beach', distance: '17 MIN DRIVE' },
+            { icon: MdChurch, name: 'The Rock Cathedral', distance: '10 MIN DRIVE' },
           ]}
           onBookBranch={() => setIsBookingModalOpen(true)}
         />
@@ -140,7 +133,7 @@ export default function IkateBranchPage() {
       <BookingModal
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
-        branchName="Ikate Luxury"
+        branchName="Parktonian Ikate"
       />
     </Box>
   );

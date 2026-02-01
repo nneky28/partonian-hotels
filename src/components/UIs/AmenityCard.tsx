@@ -4,10 +4,10 @@ import { IconType } from 'react-icons';
 interface AmenityCardProps {
   icon: IconType;
   title: string;
-  description: string;
+
 }
 
-export const AmenityCard = ({ icon, title, description }: AmenityCardProps) => {
+export const AmenityCard = ({ icon, title }: AmenityCardProps) => {
   return (
     <VStack p={4} textAlign="center" spacing={4}>
       <Icon as={icon} boxSize={10} color="primaryRed" />
@@ -20,9 +20,7 @@ export const AmenityCard = ({ icon, title, description }: AmenityCardProps) => {
       >
         {title}
       </Heading>
-      <Text color="textMuted" fontSize="xs">
-        {description}
-      </Text>
+
     </VStack>
   );
 };

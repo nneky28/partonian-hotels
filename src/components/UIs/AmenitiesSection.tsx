@@ -8,11 +8,11 @@ const amenities = [
   {
     icon: MdRestaurant,
     title: 'Fine Dining',
-    description: 'Curated culinary journeys at every branch.',
+  
   },
   {
     icon: MdPool,
-    title: 'Infinity Pools',
+    title: 'Swimming Pools',
     description: 'Luxury relaxation in our temperature-controlled pools.',
   },
   {
@@ -22,7 +22,7 @@ const amenities = [
   },
   {
     icon: PiHandshakeBold,
-    title: 'Concierge',
+    title: 'Bespoke Service',
     description: 'Dedicated 24/7 bespoke service for every guest.',
   },
 ];

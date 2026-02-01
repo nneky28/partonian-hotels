@@ -26,7 +26,7 @@ export const AboutSection = ({ onBookRoom }: AboutSectionProps) => {
               fontSize="xs"
               mb={4}
             >
-              Welcome
+              Welcome TO
             </Text>
             <Heading
               as="h2"
@@ -35,6 +35,7 @@ export const AboutSection = ({ onBookRoom }: AboutSectionProps) => {
               fontWeight="bold"
               mb={8}
               lineHeight="1.2"
+              color="primaryRed"
             >
               Parktonian Hotels
             </Heading>
@@ -47,8 +48,7 @@ export const AboutSection = ({ onBookRoom }: AboutSectionProps) => {
               lineHeight="relaxed"
               fontWeight="medium"
             >
-              Parktonian Hotels is a world class destination for individuals who
-              desire a luxurious environment to rest, relax and refresh.
+             A world class destination for individuals who desire a luxurious environment to rest, relax and refresh.
             </Text>
 
             <Text
@@ -57,12 +57,17 @@ export const AboutSection = ({ onBookRoom }: AboutSectionProps) => {
               lineHeight="relaxed"
               fontWeight="medium"
             >
-              We provide every amenity necessary for a pleasurable stay. Enjoy our
-              serene environment with optimal security, luxurious rooms, wifi
-              internet, room service, exquisite lounge, swimming pool, gym and much
-              more.
+             Discover a sanctuary of comfort and sophistication across our various locations. Immerse yourself in world-class amenities and personalized service. Where every detail matters and excellence is standard. 
             </Text>
 
+           <Text
+              fontSize={{ base: 'md', md: 'lg' }}
+              color="white"
+              lineHeight="relaxed"
+              fontWeight="medium"
+            >
+             We provide every amenity necessary for a pleasurable stay. Enjoy a serene environment with optimal security, luxurious rooms, wifi internet, room service, exquisite lounge, swimming pool, gym and much more.
+            </Text>
             <Text
               fontSize={{ base: 'md', md: 'lg' }}
               color="white"
@@ -70,7 +75,7 @@ export const AboutSection = ({ onBookRoom }: AboutSectionProps) => {
               lineHeight="relaxed"
               pt={4}
             >
-              Book a room today and experience comfort, hospitality and luxury!
+            Book your stay at any of our prestigious locations today, and experience comfort, hospitality and luxury at every turn.
             </Text>
           </VStack>
         </VStack>

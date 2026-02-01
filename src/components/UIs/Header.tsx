@@ -1,9 +1,10 @@
 'use client';
 
-import { Box, Flex, HStack, Link, Image } from '@chakra-ui/react';
+import { Box, Flex, HStack, Link, Image, IconButton, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, VStack, useDisclosure } from '@chakra-ui/react';
 import { NavLink } from '@/types';
 import { usePathname } from 'next/navigation';
 import NextLink from 'next/link';
+import { GiHamburgerMenu } from "react-icons/gi";
 
 interface HeaderProps {
   navLinks: NavLink[];
@@ -12,6 +13,7 @@ interface HeaderProps {
 
 export const Header = ({ navLinks }: HeaderProps) => {
   const pathname = usePathname();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const isActiveLink = (href: string) => {
     if (href === '/' && pathname === '/') {
@@ -42,7 +44,7 @@ export const Header = ({ navLinks }: HeaderProps) => {
             <Image
              srcSet='https://res.cloudinary.com/djmwqkcw5/image/upload/v1769628785/Parktonian_Black_ttdw7p.png'
              objectFit={'contain'}
-             width={'8%'}
+             width={{ base: '12%', md: '8%' }}
             />
         </Box>
 
@@ -64,6 +66,57 @@ export const Header = ({ navLinks }: HeaderProps) => {
             </Link>
           ))}
         </HStack>
+
+        <IconButton
+          aria-label="Open menu"
+          icon={<GiHamburgerMenu size={'40%'} />}
+          display={{ base: 'flex', md: 'none' }}
+          onClick={onOpen}
+          variant="ghost"
+          color="white"
+          _hover={{ bg: 'whiteAlpha.200' }}
+          size="lg"
+        />
+
+        <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
+          <DrawerOverlay bg="rgba(0, 0, 0, 0.8)" backdropFilter="blur(8px)" />
+          <DrawerContent bg="luxuryBlack" borderLeft="1px" borderColor="whiteAlpha.100">
+            <DrawerCloseButton color="white" size="lg" />
+            <DrawerHeader borderBottom="1px" borderColor="whiteAlpha.100">
+              <Image
+                src='https://res.cloudinary.com/djmwqkcw5/image/upload/v1769628785/Parktonian_Black_ttdw7p.png'
+                objectFit={'contain'}
+                width={'30%'}
+              />
+            </DrawerHeader>
+
+            <DrawerBody pt={8}>
+              <VStack spacing={6} align="stretch">
+                {navLinks.map((link) => (
+                  <Link
+                    as={NextLink}
+                    key={link.href}
+                    href={link.href}
+                    fontSize="lg"
+                    fontWeight="bold"
+                    textTransform="uppercase"
+                    letterSpacing="wider"
+                    color={isActiveLink(link.href) ? 'primaryRed' : 'white'}
+                    _hover={{ color: 'primaryRed' }}
+                    transition="colors 0.2s"
+                    onClick={onClose}
+                    py={3}
+                    px={4}
+                    borderRadius="md"
+                    bg={isActiveLink(link.href) ? 'whiteAlpha.100' : 'transparent'}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </VStack>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
 
       </Flex>
     </Box>

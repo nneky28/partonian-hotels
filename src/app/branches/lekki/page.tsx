@@ -8,7 +8,7 @@ import { BranchInfoSection } from '@/components/UIs/BranchInfoSection';
 import { RoomsSection } from '@/components/UIs/RoomsSection';
 import { Footer } from '@/components/UIs/footer';
 import { BookingModal } from '@/components/UIs/BookingModal';
-import { MdPool, MdWifi, MdFitnessCenter, MdLocalParking, MdPalette, MdBeachAccess, MdShoppingBag, MdKingBed, MdVisibility, MdWork, MdLocalBar, MdSoupKitchen, MdBalcony, MdBreakfastDining } from 'react-icons/md';
+import { MdPool, MdWifi, MdLocalParking, MdPalette, MdBeachAccess, MdShoppingBag, MdKingBed, MdVisibility, MdWork, MdLocalBar, MdSoupKitchen, MdBalcony, MdBreakfastDining, MdBed,MdSquare } from 'react-icons/md';
 import { footerSections } from '@/utils/footerSection';
 import { FaConciergeBell } from "react-icons/fa";
 
@@ -20,12 +20,6 @@ const navLinks = [
   { label: 'Awka', href: '/branches/awka' },
 ];
 
-const photos = {
-  main: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629746/DSC00334_bt55ra.jpg',
-  lounge: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629735/DSC00335_d3z16p.jpg',
-  dining: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629734/DSC00347_jtnszt.jpg',
-  pool: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629705/DSC00323_vqbjyw.jpg',
-};
 
 const rooms = [
   {
@@ -139,26 +133,31 @@ export default function LekkiBranchPage() {
         />
 
         <BranchInfoSection
-          subtitle="Exclusivity in Lagos"
+          subtitle="Luxury Redefined"
           title="The Iconic Parktonian <br/>Hotel Lekki Phase 1"
           description={[
-            "Nestled in the heart of Lagos' most prestigious residential district, Parktonian Hotel Lekki stands as a beacon of modern luxury and African hospitality. Our establishment is designed for the discerning traveler who seeks both comfort and connection.",
-            "From our signature sunset lounge to the meticulously curated international buffet, every detail has been refined to provide an unforgettable stay. Whether you're here for business in the peninsula or leisure by the coast, we offer a sanctuary of calm amidst the vibrant energy of Lekki.",
+            "Experience unparalleled elegance in the heart of Lagos' most prestigious district. Parktonian Hotel Lekki stands as a beacon of modern luxury and African hospitality.",
+            "Nestled in Lekki Phase 1, Parktonian Hotel Lekki offers breathtaking views and world-class amenities for discerning guests. Our establishment is designed for those who desire comfort, luxury and connection.",
+            "From our exclusive indoor lounge, to the serene pool side, to the meticulously curated international buffet, every detail has been refined to provide an unforgettable stay. Our luxurious rooms are designed to delight your senses and give you maximum comfort during your stay. ",
+            "Whether you're here for business in the peninsula or leisure by the coast, we offer a sanctuary of calm amidst the vibrant energy of Lekki.  The iconic Parktonian Hotel in Lekki Phase 1 is one of the top destinations in Lagos for individuals of class.",
+            'Visit us today and indulge in a wholesome experience crafted for perfection.'
+
           ]}
           stats={[
             { value: '50+', label: 'Luxury<br/>Suites' },
             { value: '24/7', label: 'Concierge<br/>Service' },
           ]}
           amenities={[
-            { icon: MdPool, label: 'Oasis Pool' },
-            { icon: MdWifi, label: 'Fast Wi-Fi' },
-            { icon: MdFitnessCenter, label: 'Fitness Club' },
-            { icon: MdLocalParking, label: 'Secure Park' },
+            {icon: MdBed, label: 'Luxurious Rooms'},
+            { icon: MdLocalBar, label: 'Executive Lounge' },
+            { icon: MdPool, label: 'Swimming Pool' },
+            { icon: MdLocalParking, label: 'Secure Parking' },
           ]}
           attractions={[
             { icon: MdPalette, name: 'Nike Art Gallery', distance: '5 MIN DRIVE' },
             { icon: MdBeachAccess, name: 'Elegushi Beach', distance: '8 MIN DRIVE' },
             { icon: MdShoppingBag, name: 'The Palms Mall', distance: '10 MIN DRIVE' },
+            { icon: MdSquare, name: 'Lekki-Ikoyi Bridge', distance: '15 MIN DRIVE' },
           ]}
           onBookBranch={() => setIsBookingModalOpen(true)}
         />

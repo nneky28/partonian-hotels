@@ -245,58 +245,18 @@ export const BookingModal = ({
 
     setIsSubmitting(true);
 
-    // try {
-    //   const response = await fetch('/api/booking', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       branchName,
-    //       checkIn: checkInDate?.toISOString(),
-    //       checkOut: checkOutDate?.toISOString(),
-    //       roomType,
-    //       guests,
-    //       nights: numberOfNights,
-    //       totalPrice,
-    //       fullName,
-    //       email,
-    //       phone,
-    //     }),
-    //   });
-
-    //   const data = await response.json();
-
-    //   if (data.success) {
-    //     toast({
-    //       title: "Booking Submitted!",
-    //       description: data.message,
-    //       status: "success",
-    //       duration: 7000,
-    //       isClosable: true,
-    //     });
-    //     handleClose();
-    //   } else {
-    //     toast({
-    //       title: "Submission Failed",
-    //       description: data.message,
-    //       status: "error",
-    //       duration: 5000,
-    //       isClosable: true,
-    //     });
-    //   }
-    // } catch (error) {
-    //   toast({
-    //     title: "Error",
-    //     description: "Failed to submit booking. Please try again.",
-    //     status: "error",
-    //     duration: 5000,
-    //     isClosable: true,
-    //   });
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
-
+    // TODO: Implement booking submission with your preferred email service
+    setTimeout(() => {
+      toast({
+        title: "Booking Submitted!",
+        description: "We'll contact you shortly to confirm your reservation.",
+        status: "success",
+        duration: 7000,
+        isClosable: true,
+      });
+      handleClose();
+      setIsSubmitting(false);
+    }, 1000);
   };
 
   // Reset form on close
@@ -342,7 +302,7 @@ export const BookingModal = ({
               <Image
                 src="https://res.cloudinary.com/djmwqkcw5/image/upload/v1769628785/Parktonian_Black_ttdw7p.png"
                 objectFit="contain"
-                width="8%"
+                width={{ base: "20%", md: "8%" }}
               />
               <Text
                 fontSize="xs"

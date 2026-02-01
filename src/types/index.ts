@@ -19,5 +19,6 @@ export interface NavLink {
 
 export interface FooterSection {
   title: string;
-  links: Array<{ label: string; href: string }>;
+  description: Array<{label:string, tab:string}>
+  // links: Array<{ label: string; href: string }>;
 }

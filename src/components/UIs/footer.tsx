@@ -31,29 +31,32 @@ export const Footer = ({ sections }: FooterProps) => {
       bg="luxuryBlack"
       pt={24}
       pb={12}
-      px={6}
+      px={{ base: 6, lg: 1 }}
       borderTop="1px"
       borderColor="whiteAlpha.50"
     >
       <Box maxW="7xl" mx="auto">
-        <Grid
-          templateColumns={{ base: "1fr", md: "repeat(12, 1fr)" }}
-          gap={12}
+        <Flex
+          direction={{ base: "column", md: "row" }}
+          justify="space-between"
+          gap={{ base: 8, md: 12 }}
           mb={20}
         >
-          <GridItem colSpan={{ base: 1, md: 5 }}>
+
+
+          <Box flex={{ base: "1", md: "0 0 25%" }}>
+            
             <Box>
               <Image
                 srcSet="https://res.cloudinary.com/djmwqkcw5/image/upload/v1769628785/Parktonian_Black_ttdw7p.png"
                 objectFit={"contain"}
-                width={"8%"}
+                width={{ base: "20%", md: "15%" }}
                 mb={4}
               />
             </Box>
             <Text
               color="textMuted"
-              fontSize="lg"
-              maxW="md"
+              fontSize="md"
               lineHeight="relaxed"
             >
               Setting the benchmark for high-end hospitality in Nigeria. A
@@ -82,10 +85,10 @@ export const Footer = ({ sections }: FooterProps) => {
                 <Icon as={FaTwitter} boxSize={5} />
               </Link>
             </HStack>
-          </GridItem>
+          </Box>
 
           {sections.map((section) => (
-            <GridItem key={section.title} colSpan={{ base: 1, md: 2 }}>
+            <Box key={section.title} >
               <Heading
                 as="h6"
                 fontWeight="black"
@@ -98,10 +101,10 @@ export const Footer = ({ sections }: FooterProps) => {
                 {section.title}
               </Heading>
               <VStack align="flex-start" spacing={4}>
-                {section.links.map((link) => (
+                {section.description.map((link) => (
                   <Link
                     key={link.label}
-                    href={link.href}
+                    href={link.tab}
                     color="textMuted"
                     fontSize="sm"
                     fontWeight="medium"
@@ -112,31 +115,9 @@ export const Footer = ({ sections }: FooterProps) => {
                   </Link>
                 ))}
               </VStack>
-            </GridItem>
+            </Box>
           ))}
-
-          <GridItem colSpan={{ base: 1, md: 3 }}>
-            <Heading
-              as="h6"
-              fontWeight="black"
-              textTransform="uppercase"
-              letterSpacing="widest"
-              fontSize="xs"
-              color="primaryRed"
-              mb={6}
-            >
-              Contact
-            </Heading>
-            <VStack align="flex-start" spacing={4}>
-              <Text color="textMuted" fontSize="sm">
-                info@parktonianhotels.com
-              </Text>
-              <Text color="textMuted" fontSize="sm">
-                +234 (0) 800 PARKTONIAN
-              </Text>
-            </VStack>
-          </GridItem>
-        </Grid>
+        </Flex>
 
         <Flex
           pt={8}

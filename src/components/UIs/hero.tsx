@@ -46,22 +46,22 @@ const navLinks = [
 const branches: Branch[] = [
   {
     id: 'lekki',
-    name: 'Lekki Phase 1',
-    title: 'Lekki Phase 1',
+    name: 'Parktonian Lekki',
+    title: 'Parktonian Lekki',
     description: "The heart of Lagos' most vibrant district, offering breathtaking city views and premium amenities for the modern traveler.",
     imageUrl: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629071/Parktonian_Hotel_Lekki_apc6xm.jpg',
   },
   {
     id: 'ikate',
-    name: 'Ikate Luxury',
-    title: 'Ikate Luxury',
+    name: 'Parktonian Ikate',
+    title: 'Parktonian Ikate',
     description: 'A serene escape designed for the discerning traveler seeking privacy and bespoke hospitality experiences in the city.',
     imageUrl: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629100/Parktonian_Hotel_Ikate_wegghs.jpg',
   },
   {
     id: 'awka',
-    name: 'Awka Heights',
-    title: 'Awka Heights',
+    name: 'Parktonian Awka',
+    title: 'Parktonian Awka',
     description: 'Experience premium comfort in the eastern heartland. Our Awka branch defines local luxury with international standards.',
     imageUrl: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629133/Parktonian_Hotel_Awka_x4zbrm.jpg',
   },

@@ -21,15 +21,16 @@ export const BranchesSection = ({ branches, onExploreBranch }: BranchesSectionPr
             letterSpacing="0.3em"
             fontSize="xs"
           >
-            The Collection
+          Visit our
           </Text>
           <Heading
             as="h3"
             fontSize={{ base: '4xl', md: '6xl' }}
             fontFamily="heading"
             fontWeight="bold"
+            color="primaryRed"
           >
-            Our Iconic Branches
+           Iconic Branches
           </Heading>
         </VStack>
 

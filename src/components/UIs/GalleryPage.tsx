@@ -31,7 +31,7 @@ type FilterCategory = 'all' | 'rooms' | 'dining' | 'wellness';
 
 export const GalleryPage = ({ branchName, images, backUrl }: GalleryPageProps) => {
   const [activeFilter, setActiveFilter] = useState<FilterCategory>('all');
-
+  const year = new Date()
   const filteredImages = activeFilter === 'all' 
     ? images 
     : images.filter(img => img.category === activeFilter);
@@ -126,13 +126,13 @@ export const GalleryPage = ({ branchName, images, backUrl }: GalleryPageProps) =
       {/* Gallery Grid */}
       <Container as="main" maxW="7xl" px={12} pb={40}>
         <Grid
-          templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
+          templateColumns={{ base: '1fr', md: 'repeat(1, 1fr)', lg: 'repeat(2, 1fr)' }}
           gap={8}
         >
           {filteredImages.map((image) => (
             <Box
               key={image.id}
-              aspectRatio={4 / 5}
+              // aspectRatio={4 / 5}
               overflow="hidden"
               bg="#0D0D0D"
               cursor="pointer"
@@ -166,7 +166,7 @@ export const GalleryPage = ({ branchName, images, backUrl }: GalleryPageProps) =
             Parktonian Luxury Hotel Group
           </Text>
           <Text fontSize="9px" letterSpacing="0.3em" textTransform="uppercase">
-            {branchName} © 2024
+            {branchName} © {year.getFullYear()}
           </Text>
         </HStack>
       </Box>

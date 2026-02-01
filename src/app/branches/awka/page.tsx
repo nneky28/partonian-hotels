@@ -3,12 +3,11 @@
 import { useState } from 'react';
 import { Box } from '@chakra-ui/react';
 import { Header } from '@/components/UIs/Header';
-import { BranchPageHero } from '@/components/UIs/BranchPageHero';
 import { BranchInfoSection } from '@/components/UIs/BranchInfoSection';
 import { RoomsSection } from '@/components/UIs/RoomsSection';
 import { Footer } from '@/components/UIs/footer';
 import { BookingModal } from '@/components/UIs/BookingModal';
-import { MdPool, MdWifi, MdFitnessCenter, MdLocalParking, MdChurch, MdSchool, MdLocalHospital, MdKingBed, MdBreakfastDining, MdLocalBar, MdVisibility, MdSoupKitchen, MdWork, MdBalcony } from 'react-icons/md';
+import { MdPool, MdWifi, MdFitnessCenter, MdLocalParking, MdChurch, MdSchool, MdLocalHospital, MdKingBed, MdBreakfastDining, MdLocalBar, MdVisibility, MdSoupKitchen, MdWork, MdBalcony, MdRoom, MdStadium } from 'react-icons/md';
 import { FaConciergeBell } from 'react-icons/fa';
 import { footerSections } from '@/utils/footerSection';
 import { BranchHeroSlider } from '@/components/UIs/BranchHeroSlider';
@@ -20,12 +19,7 @@ const navLinks = [
   { label: 'Awka', href: '/branches/awka' },
 ];
 
-const photos = {
-  main: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692009/Parktonian_Hotel_Awka_xckfw8.jpg',
-  lounge: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692060/PA_Deluxe_sqsnbp.jpg',
-  dining: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692059/PA_Executive_mgldps.jpg',
-  pool: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692040/PA_Alcove_lfxo9u.jpg',
-};
+
 
 const rooms = [
   {
@@ -109,22 +103,13 @@ const rooms = [
 const heroSlides = [
   {
     image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692009/Parktonian_Hotel_Awka_xckfw8.jpg',
-    title: 'Awka Heights',
-    subtitle: 'Eastern Excellence',
-    description: 'Experience premium comfort in the eastern heartland, where traditional hospitality meets international luxury standards.',
-  },
+     },
   {
     image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692059/PA_Executive_mgldps.jpg',
-    title: 'Cultural Elegance',
-    subtitle: 'Local Heritage',
-    description: 'Discover the perfect blend of modern amenities and authentic eastern Nigerian hospitality in Anambra\'s capital.',
-  },
+     },
   {
     image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692065/IMG_20220628_051430_adxtst.jpg',
-    title: 'Culinary Journey',
-    subtitle: 'Authentic Flavors',
-    description: 'Savor authentic local delicacies and international cuisine in our executive restaurant overlooking the city.',
-  },
+       },
 ];
 
 export default function AwkaBranchPage() {
@@ -147,26 +132,28 @@ export default function AwkaBranchPage() {
         />
 
         <BranchInfoSection
-          subtitle="Eastern Excellence"
-          title="Awka Heights<br/>Premium"
+          subtitle="SERENE ELEGANCE"
+          title="The Delightful Parktonian <br/>Hotel Awka"
           description={[
-            "Experience premium comfort in the eastern heartland. Our Awka branch defines local luxury with international standards, blending traditional hospitality with modern amenities.",
-            "From our wellness pool to our executive restaurant serving authentic local and international cuisine, every aspect is designed to make your stay memorable in Anambra's capital city.",
+            "Experience premium comfort in the eastern heartland, where traditional hospitality meets international luxury standards.",
+            "Parktonian Hotel Awka is located along the Enugu Onitsha Expressway. It is a top destination for individuals who desire a luxurious environment to relax and refresh. Discover the perfect blend of modern amenities and authentic eastern Nigerian hospitality in Anambra's capital.",
+            "Enjoy our luxurious rooms designed to give you maximum comfort. Meet up with friends in our executive lounge, or hangout by the pool side. Savor authentic local delicacies and international cuisine in our exclusive restaurant. Also don’t forget to hit the gym.",
+            "Every moment at Parktonian Hotel Awka is designed to make your stay memorable in Anambra's capital city. Visit us today and experience comfort, hospitality and luxury!"
           ]}
           stats={[
             { value: '35+', label: 'Comfort<br/>Rooms' },
             { value: '5★', label: 'Premium<br/>Rating' },
           ]}
           amenities={[
-            { icon: MdPool, label: 'Garden Pool' },
-            { icon: MdWifi, label: 'Fast Internet' },
+            { icon: MdRoom, label: 'Luxurious Rooms' },
+            { icon: MdPool, label: 'Swimming Pool' },
             { icon: MdFitnessCenter, label: 'Fitness Center' },
-            { icon: MdLocalParking, label: 'Free Parking' },
+            { icon: MdLocalParking, label: 'Secure Parking' },
           ]}
           attractions={[
+            { icon: MdStadium, name: 'Awka City Stadium', distance: '10 MIN DRIVE' },
+            { icon: MdSchool, name: 'Nnamdi Azikiwe University', distance: '8 MIN DRIVE' },
             { icon: MdChurch, name: "St. Patrick's Cathedral", distance: '5 MIN DRIVE' },
-            { icon: MdSchool, name: 'UNIZIK', distance: '8 MIN DRIVE' },
-            { icon: MdLocalHospital, name: 'Teaching Hospital', distance: '10 MIN DRIVE' },
           ]}
           onBookBranch={() => setIsBookingModalOpen(true)}
         />
@@ -179,7 +166,7 @@ export default function AwkaBranchPage() {
       <BookingModal
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
-        branchName="Awka Heights"
+        branchName="Parktonian Awka"
       />
     </Box>
   );
