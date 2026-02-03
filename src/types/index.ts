@@ -4,6 +4,7 @@ export interface Branch {
   title: string;
   description: string;
   imageUrl: string;
+  srcSet?: string; // Add this
 }
 
 export interface Amenity {

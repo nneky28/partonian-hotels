@@ -48,9 +48,12 @@ export const Header = ({ navLinks }: HeaderProps) => {
       <Flex maxW="7xl" mx="auto" align="center" justify="space-between">
         <Box cursor="pointer" onClick={handleGoHome}>
             <Image
-             srcSet='https://res.cloudinary.com/djmwqkcw5/image/upload/v1769628785/Parktonian_Black_ttdw7p.png'
+             src='https://res.cloudinary.com/djmwqkcw5/image/upload/v1769628785/Parktonian_Black_ttdw7p.png'
+             srcSet='https://res.cloudinary.com/djmwqkcw5/image/upload/w_200,q_auto,f_auto/v1769628785/Parktonian_Black_ttdw7p.png 200w, https://res.cloudinary.com/djmwqkcw5/image/upload/w_400,q_auto,f_auto/v1769628785/Parktonian_Black_ttdw7p.png 400w'
+             sizes="(max-width: 768px) 100px, 150px"
+             alt="Parktonian Hotels Logo"
              objectFit={'contain'}
-             width={{ base: '25%', md: '10%' }}
+             width={{ base: '20%', md: '25%' }}
             />
         </Box>
 

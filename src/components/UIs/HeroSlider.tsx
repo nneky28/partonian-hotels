@@ -7,6 +7,7 @@ import { TbChevronRight } from "react-icons/tb";
 
 interface Slide {
   backgroundImage: string;
+  srcSet?: string; // Add this
   title: string;
   highlightedText: string;
   description: string;
@@ -72,6 +73,11 @@ export const HeroSlider = ({ slides, autoPlayInterval = 5000 }: HeroSliderProps)
           filter="brightness(0.7)"
           opacity={currentSlide === index ? 1 : 0}
           transition="opacity 1s ease-in-out"
+          sx={{
+            '@media (max-width: 768px)': {
+              bgImage: slide.srcSet ? `url(${slide.srcSet.split(',')[0].split(' ')[0]})` : slide.backgroundImage,
+            }
+          }}
         />
       ))}
 

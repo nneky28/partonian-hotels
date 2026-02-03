@@ -48,9 +48,12 @@ export const Footer = ({ sections }: FooterProps) => {
             
             <Box>
               <Image
-                srcSet="https://res.cloudinary.com/djmwqkcw5/image/upload/v1769628785/Parktonian_Black_ttdw7p.png"
+                src="https://res.cloudinary.com/djmwqkcw5/image/upload/v1769628785/Parktonian_Black_ttdw7p.png"
+                srcSet='https://res.cloudinary.com/djmwqkcw5/image/upload/w_200,q_auto,f_auto/v1769628785/Parktonian_Black_ttdw7p.png 200w, https://res.cloudinary.com/djmwqkcw5/image/upload/w_400,q_auto,f_auto/v1769628785/Parktonian_Black_ttdw7p.png 400w'
+                sizes="(max-width: 768px) 80px, 120px"
+                alt="Parktonian Hotels Logo"
                 objectFit={"contain"}
-                width={{ base: "20%", md: "15%" }}
+                width={{ base: "30%", md: "20%", lg: "15%" }}
                 mb={4}
               />
             </Box>

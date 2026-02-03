@@ -28,6 +28,7 @@ interface Room {
   name: string;
   price: string;
   image: string;
+  srcSet?: string;
   badge?: {
     text: string;
     color: 'primary' | 'gold';
@@ -179,6 +180,8 @@ export const RoomsSection = ({ rooms, onBookRoom, onToggleFavorite }: RoomsSecti
                 <Box position="relative" w="full" aspectRatio={16 / 9} overflow="hidden">
                   <Image
                     src={room.image}
+                    srcSet={room.srcSet || room.image}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     alt={room.name}
                     w="full"
                     h="full"

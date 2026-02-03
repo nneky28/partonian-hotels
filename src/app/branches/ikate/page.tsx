@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Box } from "@chakra-ui/react";
 import { Header } from "@/components/UIs/Header";
+import { BranchHeroSlider } from "@/components/UIs/BranchHeroSlider";
 import { BranchInfoSection } from "@/components/UIs/BranchInfoSection";
 import { RoomsSection } from "@/components/UIs/RoomsSection";
 import { Footer } from "@/components/UIs/footer";
@@ -11,20 +12,23 @@ import {
   MdPool,
   MdWifi,
   MdLocalParking,
-  MdTheaters,
-  MdShoppingBag,
+  MdRestaurant,
   MdKingBed,
   MdVisibility,
-  MdBalcony,
-  MdBreakfastDining,
+  MdWork,
   MdLocalBar,
+  MdBalcony,
+  MdBed,
   MdHome,
   MdRoomService,
+  MdTheaters,
+  MdShoppingBag,
   MdBeachAccess,
   MdChurch,
+  MdFreeBreakfast,
 } from "react-icons/md";
 import { footerSections } from "@/utils/footerSection";
-import { BranchHeroSlider } from "@/components/UIs/BranchHeroSlider";
+import { getResponsiveSrcSet } from "@/utils/imageUtils";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -35,11 +39,11 @@ const navLinks = [
 
 const rooms = [
   {
-    id: "deluxe-room",
-    name: "Deluxe Room",
-    price: "₦80,000",
-    image:
-      "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691611/PI_Deluxe_coyn3r.jpg",
+    id: "deluxe",
+    name: "Deluxe",
+    price: "₦100,000",
+    image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769690851/PI_Deluxe_fupxws.jpg",
+    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769690851/PI_Deluxe_fupxws.jpg"),
     badge: { text: "Best Value", color: "primary" as const },
     description:
       "Comfortable room with modern amenities. Rate with breakfast: ₦95,000",
@@ -50,11 +54,11 @@ const rooms = [
     ],
   },
   {
-    id: "alcove-room",
-    name: "Alcove Room",
+    id: "alcove",
+    name: "Alcove",
     price: "₦90,000",
-    image:
-      "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691596/PI_Alcove_el0weu.jpg",
+    image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691596/PI_Alcove_el0weu.jpg",
+    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691596/PI_Alcove_el0weu.jpg"),
     description:
       "Spacious alcove room with sitting area. Rate with breakfast: ₦105,000",
     amenities: [
@@ -64,35 +68,37 @@ const rooms = [
     ],
   },
   {
-    id: "executive-room",
-    name: "Executive Room",
+    id: "executive",
+    name: "Executive",
     price: "₦180,000",
-    image:
-      "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691603/PI_Executive_Suite_f0oorc.jpg",
+    image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691603/PI_Executive_Suite_f0oorc.jpg",
+    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691603/PI_Executive_Suite_f0oorc.jpg"),
     badge: { text: "Premium", color: "gold" as const },
     description:
       "Premium executive room with enhanced amenities. Rate with breakfast: ₦195,000",
     amenities: [
       { icon: MdBalcony, label: "Balcony" },
-      { icon: MdBreakfastDining, label: "Breakfast" },
-      { icon: MdPool, label: "Conceirge" },
+      { icon: MdFreeBreakfast, label: "Breakfast" },
+      { icon: MdRoomService, label: "Concierge" },
     ],
   },
 ];
 
 const heroSlides = [
-  {
-    image:
-      "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691451/IMG_20220704_113143_ekgtx1.jpg",
-  },
-  {
+    {
     image:
       "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691581/Parktonian_Hotel_Ikate_oytb43.jpg",
+    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691581/Parktonian_Hotel_Ikate_oytb43.jpg"),
+  },
+  {
+    image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691523/IMG_20220702_195226_ymzrga.jpg",
+    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691523/IMG_20220702_195226_ymzrga.jpg"),
   },
 
   {
     image:
       "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691611/PI_Deluxe_coyn3r.jpg",
+    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691611/PI_Deluxe_coyn3r.jpg"),
     title: "Parktonian Ikate",
     description:
       "A tranquil retreat in Lagos' most exclusive neighborhood, designed for those who seek privacy and bespoke hospitality.",
@@ -100,6 +106,7 @@ const heroSlides = [
   {
     image:
       "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691603/PI_Executive_Suite_f0oorc.jpg",
+    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691603/PI_Executive_Suite_f0oorc.jpg"),
     title: "Contemporary Design",
     description:
       "Experience contemporary luxury with rooftop infinity pool and premium spa services crafted for your ultimate relaxation.",
@@ -107,6 +114,7 @@ const heroSlides = [
   {
     image:
       "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691596/PI_Alcove_el0weu.jpg",
+    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691596/PI_Alcove_el0weu.jpg"),
     title: "Rooftop Paradise",
     description:
       "Unwind at our stunning rooftop pool with panoramic city views and exclusive cabana service.",
@@ -114,6 +122,7 @@ const heroSlides = [
   {
     image:
       "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691601/IMG_20220704_113706_smqueb.jpg",
+        srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691601/IMG_20220704_113706_smqueb.jpg"),
   },
 ];
 
@@ -200,3 +209,5 @@ export default function IkateBranchPage() {
     </Box>
   );
 }
+
+export const dynamic = "force-static";

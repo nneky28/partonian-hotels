@@ -4,6 +4,7 @@ import { Box, VStack, Heading, Text, SimpleGrid } from '@chakra-ui/react';
 import { BranchCard } from './BranchCard';
 import { Branch } from '@/types';
 
+
 interface BranchesSectionProps {
   branches: Branch[];
   onExploreBranch?: (id: string) => void;

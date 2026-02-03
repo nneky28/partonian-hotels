@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { background, Box } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { Header } from './Header';
 import { HeroSlider } from './HeroSlider';
 import { AboutSection } from './AboutSection';
@@ -11,16 +11,19 @@ import { Branch} from '@/types';
 import { Footer } from './footer';
 import { useRouter } from 'next/navigation';
 import { footerSections } from '@/utils/footerSection';
+import { getResponsiveSrcSet } from '@/utils/imageUtils';
 
 const heroSlides = [
   {
     backgroundImage: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629071/Parktonian_Hotel_Lekki_apc6xm.jpg',
+    srcSet: getResponsiveSrcSet('https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629071/Parktonian_Hotel_Lekki_apc6xm.jpg'),
     title: 'Experience',
     highlightedText: 'Parktonian Hotels',
     description: 'Discover a sanctuary of comfort and sophistication across our premier locations in Lagos and Awka. Unparalleled luxury at every turn.',
   },
   {
     backgroundImage: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1770115018/DSC00323_zgghic.jpg',
+    srcSet: getResponsiveSrcSet('https://res.cloudinary.com/djmwqkcw5/image/upload/v1770115018/DSC00323_zgghic.jpg'),
     title: 'Luxury Meets',
     highlightedText: 'Comfort',
     description: 'Immerse yourself in world-class amenities and personalized service. Where every detail matters and excellence is standard.',
@@ -33,18 +36,21 @@ const heroSlides = [
   },
   {
     backgroundImage: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1770115114/DSC00304_txnbii.jpg',
+    srcSet: getResponsiveSrcSet('https://res.cloudinary.com/djmwqkcw5/image/upload/v1770115114/DSC00304_txnbii.jpg'),
     title: 'Excellence Meets',
     highlightedText: 'Luxury',
     description: 'Immerse yourself in world-class amenities and personalized service. Where every detail matters and excellence is standard.',
   },
   {
     backgroundImage: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1770115232/IMG_9418_hzmvqh.jpg',
+    srcSet: getResponsiveSrcSet('https://res.cloudinary.com/djmwqkcw5/image/upload/v1770115232/IMG_9418_hzmvqh.jpg'),
     title: 'Enjoy Premium',
-    highlightedText: 'Dishes',
+    highlightedText: 'Delicacies',
     description: 'Savor exquisite dining experiences crafted for perfection. From signature cocktails to international cuisine, indulge in culinary excellence.',
   },
   {
     backgroundImage: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1770115115/DSC00296_lbumm3.jpg',
+    srcSet: getResponsiveSrcSet('https://res.cloudinary.com/djmwqkcw5/image/upload/v1770115115/DSC00296_lbumm3.jpg'),
     title: 'Top-notch Gym',
     highlightedText: 'Facilities',
     description: 'Experience unparalleled elegance in the heart of Lagos\' most prestigious district. Parktonian Hotel Lekki stands as a beacon of modern luxury and African hospitality.',
@@ -65,6 +71,7 @@ const branches: Branch[] = [
     title: 'Parktonian Lekki',
     description: "The heart of Lagos' most vibrant district, offering breathtaking city views and premium amenities for the modern traveler.",
     imageUrl: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629071/Parktonian_Hotel_Lekki_apc6xm.jpg',
+    srcSet: getResponsiveSrcSet('https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629071/Parktonian_Hotel_Lekki_apc6xm.jpg'),
   },
   {
     id: 'ikate',
@@ -72,6 +79,7 @@ const branches: Branch[] = [
     title: 'Parktonian Ikate',
     description: 'A serene escape designed for the discerning traveler seeking privacy and bespoke hospitality experiences in the city.',
     imageUrl: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629100/Parktonian_Hotel_Ikate_wegghs.jpg',
+    srcSet: getResponsiveSrcSet('https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629100/Parktonian_Hotel_Ikate_wegghs.jpg'),
   },
   {
     id: 'awka',
@@ -79,6 +87,7 @@ const branches: Branch[] = [
     title: 'Parktonian Awka',
     description: 'Experience premium comfort in the eastern heartland. Our Awka branch defines local luxury with international standards.',
     imageUrl: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629133/Parktonian_Hotel_Awka_x4zbrm.jpg',
+    srcSet: getResponsiveSrcSet('https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629133/Parktonian_Hotel_Awka_x4zbrm.jpg'),
   },
 ];
 

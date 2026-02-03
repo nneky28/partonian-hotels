@@ -261,7 +261,8 @@ export const BookingModal = ({
       };
 
       const bookingData = {
-        token: process.env.NEXT_PUBLIC_APPS_SCRIPT_TOKEN,
+        // Hard-code for Smartweb deployment
+        token: 'prod_YOUR_ACTUAL_PRODUCTION_TOKEN_HERE',
         branchName,
         fullName,
         email,
@@ -274,7 +275,8 @@ export const BookingModal = ({
         totalPrice: formatCurrency(totalPrice),
       };
 
-      const APPS_SCRIPT_URL = process.env.NEXT_PUBLIC_APPS_SCRIPT_URL;
+      // Hard-code URL for Smartweb
+      const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_PRODUCTION_URL_HERE/exec';
 
       if (!APPS_SCRIPT_URL) {
         throw new Error('Apps Script URL not configured');
@@ -380,6 +382,9 @@ export const BookingModal = ({
             <Box>
               <Image
                 src="https://res.cloudinary.com/djmwqkcw5/image/upload/v1769628785/Parktonian_Black_ttdw7p.png"
+                srcSet='https://res.cloudinary.com/djmwqkcw5/image/upload/w_200,q_auto,f_auto/v1769628785/Parktonian_Black_ttdw7p.png 200w, https://res.cloudinary.com/djmwqkcw5/image/upload/w_400,q_auto,f_auto/v1769628785/Parktonian_Black_ttdw7p.png 400w'
+                sizes="(max-width: 768px) 60px, 100px"
+                alt="Parktonian Hotels Logo"
                 objectFit="contain"
                 width={{ base: "20%", md: "8%" }}
               />

@@ -4,7 +4,7 @@ export const footerSections: FooterSection[] = [
   {
     title: 'Parktonian Hotel Lekki',
     description: [
-      { label: 'Plot 2Kayode Animashaun Str.', tab: '/branches/lekki' },
+      { label: 'Plot 2, Kayode Animashaun Str.', tab: '/branches/lekki' },
       { label: 'Off Admiralty Way, Lekki Phase 1, Lagos.', tab: '/branches/ikate' },
       { label: '0906 000 2599', tab: '' },
     ],

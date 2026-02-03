@@ -43,7 +43,7 @@ export const AboutSection = ({ onBookRoom }: AboutSectionProps) => {
 
           <VStack spacing={6} maxW="3xl">
             <Text
-              fontSize={{ base: 'lg', md: 'xl' }}
+              fontSize={{ base: 'md', md: 'lg' }}
               color="whiteAlpha.700"
               lineHeight="relaxed"
               fontWeight="medium"
@@ -68,12 +68,12 @@ export const AboutSection = ({ onBookRoom }: AboutSectionProps) => {
             >
              We provide every amenity necessary for a pleasurable stay. Enjoy a serene environment with optimal security, luxurious rooms, wifi internet, room service, exquisite lounge, swimming pool, gym and much more.
             </Text>
+            
             <Text
               fontSize={{ base: 'md', md: 'lg' }}
               color="whiteAlpha.700"
-              fontWeight="semibold"
               lineHeight="relaxed"
-              pt={4}
+              fontWeight="medium"
             >
             Book your stay at any of our prestigious locations today, and experience comfort, hospitality and luxury at every turn.
             </Text>

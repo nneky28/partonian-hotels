@@ -9,13 +9,17 @@ import {
   VStack,
   Icon,
   IconButton,
-  
+  Image,
 } from '@chakra-ui/react';
 import { MdChevronLeft, MdChevronRight, MdGridView } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
 
 interface BranchSlide {
   image: string;
+  srcSet?: string; // Add this
+  title?: string;
+  subtitle?: string;
+  description?: string;
 }
 
 interface BranchHeroSliderProps {
