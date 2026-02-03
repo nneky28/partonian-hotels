@@ -53,7 +53,7 @@ export const Header = ({ navLinks }: HeaderProps) => {
              sizes="(max-width: 768px) 100px, 150px"
              alt="Parktonian Hotels Logo"
              objectFit={'contain'}
-             width={{ base: '20%', md: '25%' }}
+             width={{ base: '40px', md: '50px' }}
             />
         </Box>
 
