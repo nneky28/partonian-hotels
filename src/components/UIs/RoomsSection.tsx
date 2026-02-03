@@ -9,12 +9,10 @@ import {
   Button,
   HStack,
   Flex,
-  IconButton,
-  Badge,
   Icon,
   Image,
 } from '@chakra-ui/react';
-import { MdArrowForward, MdFavorite, MdTune } from 'react-icons/md';
+import { MdArrowForward} from 'react-icons/md';
 import { IconType } from 'react-icons';
 import { useState, useMemo } from 'react';
 
@@ -124,18 +122,34 @@ export const RoomsSection = ({ rooms, onBookRoom, onToggleFavorite }: RoomsSecti
               flexWrap="wrap"
               gap={4}
             >
-              <HStack spacing={2} overflowX="auto" pb={1}>
+              <HStack 
+                spacing={2} 
+                overflowX="auto" 
+                pb={1}
+                sx={{
+                  '&::-webkit-scrollbar': {
+                    height: '4px',
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    background: 'whiteAlpha.300',
+                    borderRadius: 'full',
+                  },
+                }}
+                w="full"
+              >
                 {availableFilters.map((filter) => (
                   <Button
                     key={filter.value}
                     h={10}
-                    px={5}
+                    px={{ base: 4, md: 5 }}
                     bg={activeFilter === filter.value ? 'primaryRed' : '#382929'}
                     color={activeFilter === filter.value ? 'white' : 'whiteAlpha.800'}
                     fontWeight={activeFilter === filter.value ? 'bold' : 'medium'}
-                    fontSize="sm"
+                    fontSize={{ base: 'xs', md: 'sm' }}
                     _hover={{ bg: activeFilter === filter.value ? 'red.600' : '#4a3939' }}
                     onClick={() => setActiveFilter(filter.value)}
+                    flexShrink={0}
+                    whiteSpace="nowrap"
                   >
                     {filter.label} 
                   </Button>

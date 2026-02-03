@@ -231,7 +231,6 @@ export const BookingModal = ({
       return;
     }
 
-    // Validate contact info
     if (!fullName || !email || !phone) {
       toast({
         title: "Missing Information",
@@ -243,10 +242,76 @@ export const BookingModal = ({
       return;
     }
 
+    if (!roomType) {
+      toast({
+        title: "Missing Information",
+        description: "Please select a room type",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
-    // TODO: Implement booking submission with your preferred email service
-    setTimeout(() => {
+    try {
+      const formatDateForSubmission = (date: Date) => {
+        return date.toISOString().split('T')[0];
+      };
+
+      const bookingData = {
+        token: process.env.NEXT_PUBLIC_APPS_SCRIPT_TOKEN,
+        branchName,
+        fullName,
+        email,
+        phone,
+        checkInDate: checkInDate ? formatDateForSubmission(checkInDate) : '',
+        checkOutDate: checkOutDate ? formatDateForSubmission(checkOutDate) : '',
+        numberOfNights,
+        roomType,
+        roomRate: formatCurrency(roomRatePerNight),
+        totalPrice: formatCurrency(totalPrice),
+      };
+
+      const APPS_SCRIPT_URL = process.env.NEXT_PUBLIC_APPS_SCRIPT_URL;
+
+      if (!APPS_SCRIPT_URL) {
+        throw new Error('Apps Script URL not configured');
+      }
+
+      // Create a form and submit it to avoid CORS issues
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = APPS_SCRIPT_URL;
+      form.target = 'hidden_iframe';
+      
+      // Create hidden iframe to receive response
+      let iframe = document.getElementById('hidden_iframe') as HTMLIFrameElement;
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.id = 'hidden_iframe';
+        iframe.name = 'hidden_iframe';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+      }
+      
+      // Add data as hidden inputs
+      Object.entries(bookingData).forEach(([key, value]) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = String(value);
+        form.appendChild(input);
+      });
+      
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+
+      // Wait a moment for submission
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       toast({
         title: "Booking Submitted!",
         description: "We'll contact you shortly to confirm your reservation.",
@@ -255,8 +320,19 @@ export const BookingModal = ({
         isClosable: true,
       });
       handleClose();
+
+    } catch (error) {
+      console.error('Booking submission error:', error);
+      toast({
+        title: "Submission Failed",
+        description: "Unable to submit booking. Please try again or contact us directly.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   // Reset form on close
@@ -265,6 +341,9 @@ export const BookingModal = ({
     setCheckOutDate(null);
     setRoomType("");
     setGuests("2");
+    setFullName("");
+    setEmail("");
+    setPhone("");
     setErrors({});
     setCurrentMonth(new Date());
     onClose();

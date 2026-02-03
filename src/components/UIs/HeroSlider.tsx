@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Box, Flex, VStack, Heading, Text, HStack, IconButton } from '@chakra-ui/react';
+import { Box, VStack, Heading, Text, HStack, IconButton } from '@chakra-ui/react';
 import { TbChevronLeft } from "react-icons/tb";
 import { TbChevronRight } from "react-icons/tb";
 
@@ -9,7 +9,6 @@ interface Slide {
   backgroundImage: string;
   title: string;
   highlightedText: string;
-  subtitle: string;
   description: string;
 }
 
@@ -70,7 +69,7 @@ export const HeroSlider = ({ slides, autoPlayInterval = 5000 }: HeroSliderProps)
           bgImage={slide.backgroundImage}
           bgSize="cover"
           bgPosition="center"
-          filter="brightness(0.4)"
+          filter="brightness(0.7)"
           opacity={currentSlide === index ? 1 : 0}
           transition="opacity 1s ease-in-out"
         />
@@ -80,7 +79,7 @@ export const HeroSlider = ({ slides, autoPlayInterval = 5000 }: HeroSliderProps)
       <Box
         position="absolute"
         inset={0}
-        bgGradient="linear(to-b, transparent, luxuryBlack)"
+        bgGradient="linear(to-b, transparent, rgba(0,0,0,0.4))"
       />
 
       {/* Navigation Arrows */}
@@ -131,20 +130,7 @@ export const HeroSlider = ({ slides, autoPlayInterval = 5000 }: HeroSliderProps)
           },
         }}
       >
-        <Flex align="center" gap={4}>
-          <Box h="1px" w={12} bg="primaryRed" />
-          <Text
-            color="primaryRed"
-            fontWeight="black"
-            textTransform="uppercase"
-            letterSpacing="0.4em"
-            fontSize="xs"
-          >
-            {currentSlideData.subtitle}
-          </Text>
-          <Box h="1px" w={12} bg="primaryRed" />
-        </Flex>
-
+    
         <Heading
           as="h1"
           fontSize={{ base: '4xl', md: '8xl' }}

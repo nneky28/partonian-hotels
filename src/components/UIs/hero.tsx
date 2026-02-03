@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Box } from '@chakra-ui/react';
+import { background, Box } from '@chakra-ui/react';
 import { Header } from './Header';
 import { HeroSlider } from './HeroSlider';
 import { AboutSection } from './AboutSection';
@@ -17,23 +17,38 @@ const heroSlides = [
     backgroundImage: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629071/Parktonian_Hotel_Lekki_apc6xm.jpg',
     title: 'Experience',
     highlightedText: 'Parktonian Hotels',
-    subtitle: 'Welcome to Excellence',
     description: 'Discover a sanctuary of comfort and sophistication across our premier locations in Lagos and Awka. Unparalleled luxury at every turn.',
   },
   {
-    backgroundImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDd1R3sUvo9FFitt40ipj8oma5rH0w8T8Djw0c72jwSVgTzE5390kn_29xmNSuHcWY0nbetSoh6jQFjmbPAoxIUsbzqouHYh1iqDJJCrtWj3b212cG-7d71tKwfcd9d5SgdPaeLnKog0R4KydXJBbP4SA9PRxM0EgTt-ieDWoEjBUXPWWQSEeSFodwMt3EKNVLDFy8XeV7Mud8SvnQ20qLccDOiZhruEkLGtoIzPT-52v5VyUa2MMUZAfM52ePuDgSsqa81Iwfce-Q',
+    backgroundImage: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1770115018/DSC00323_zgghic.jpg',
     title: 'Luxury Meets',
     highlightedText: 'Comfort',
-    subtitle: 'Premium Experience',
     description: 'Immerse yourself in world-class amenities and personalized service. Where every detail matters and excellence is standard.',
   },
   {
     backgroundImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD_4vMiLYUo-cNmfUNT2z3LthOtRe08X-EXd2gZRgsQqvfz4BwUejiLukO8Yi8JUj9RHSWuZ88IOAkrvXaA4PX2-FZVBnOG_Jk1ETr2hO1GzmG-EqamW6KAWHLSW36aGQJinYSrxIeIKkPlBPOqv9LcwVAvXhDXMy4DJ_mSlGBoSxkOYgbz1b2evHlMiflnNVidymt_jAK1g7h0Ug-WvhQ8dsSOwwcNa2qDTaIABWtgJVNWbzGWp12uBev3GuEHZckKn_ET-b9rT_M',
     title: 'Your Ultimate',
     highlightedText: 'Destination',
-    subtitle: 'Exceptional Hospitality',
     description: 'From Lagos to Awka, experience hospitality redefined. Book your stay at any of our prestigious locations today.',
   },
+  {
+    backgroundImage: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1770115114/DSC00304_txnbii.jpg',
+    title: 'Excellence Meets',
+    highlightedText: 'Luxury',
+    description: 'Immerse yourself in world-class amenities and personalized service. Where every detail matters and excellence is standard.',
+  },
+  {
+    backgroundImage: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1770115232/IMG_9418_hzmvqh.jpg',
+    title: 'Enjoy Premium',
+    highlightedText: 'Dishes',
+    description: 'Savor exquisite dining experiences crafted for perfection. From signature cocktails to international cuisine, indulge in culinary excellence.',
+  },
+  {
+    backgroundImage: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1770115115/DSC00296_lbumm3.jpg',
+    title: 'Top-notch Gym',
+    highlightedText: 'Facilities',
+    description: 'Experience unparalleled elegance in the heart of Lagos\' most prestigious district. Parktonian Hotel Lekki stands as a beacon of modern luxury and African hospitality.',
+  }
 ];
 
 const navLinks = [

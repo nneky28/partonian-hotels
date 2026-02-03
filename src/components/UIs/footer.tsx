@@ -91,20 +91,20 @@ export const Footer = ({ sections }: FooterProps) => {
             <Box key={section.title} >
               <Heading
                 as="h6"
-                fontWeight="black"
+                fontWeight="bold"
                 textTransform="uppercase"
-                letterSpacing="widest"
-                fontSize="xs"
+                letterSpacing="wider"
+                fontSize="sm"
                 color="primaryRed"
                 mb={6}
+                fontFamily="body"
               >
                 {section.title}
               </Heading>
               <VStack align="flex-start" spacing={4}>
                 {section.description.map((link) => (
-                  <Link
+                  <Text
                     key={link.label}
-                    href={link.tab}
                     color="textMuted"
                     fontSize="sm"
                     fontWeight="medium"
@@ -112,7 +112,7 @@ export const Footer = ({ sections }: FooterProps) => {
                     transition="colors 0.2s"
                   >
                     {link.label}
-                  </Link>
+                  </Text>
                 ))}
               </VStack>
             </Box>
@@ -133,6 +133,7 @@ export const Footer = ({ sections }: FooterProps) => {
             fontSize="10px"
             textTransform="uppercase"
             letterSpacing="widest"
+            textAlign={{sm:'center', base:'center'}}
           >
             © {year} Parktonian Hotels & Suites. All Rights Reserved.
           </Text>

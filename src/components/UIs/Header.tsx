@@ -2,9 +2,10 @@
 
 import { Box, Flex, HStack, Link, Image, IconButton, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, VStack, useDisclosure } from '@chakra-ui/react';
 import { NavLink } from '@/types';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import NextLink from 'next/link';
 import { GiHamburgerMenu } from "react-icons/gi";
+
 
 interface HeaderProps {
   navLinks: NavLink[];
@@ -13,6 +14,7 @@ interface HeaderProps {
 
 export const Header = ({ navLinks }: HeaderProps) => {
   const pathname = usePathname();
+  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const isActiveLink = (href: string) => {
@@ -23,6 +25,10 @@ export const Header = ({ navLinks }: HeaderProps) => {
       return true;
     }
     return false;
+  };
+
+  const handleGoHome = () => {
+    router.push('/');
   };
 
   return (
@@ -40,11 +46,11 @@ export const Header = ({ navLinks }: HeaderProps) => {
       py={4}
     >
       <Flex maxW="7xl" mx="auto" align="center" justify="space-between">
-        <Box>
+        <Box cursor="pointer" onClick={handleGoHome}>
             <Image
              srcSet='https://res.cloudinary.com/djmwqkcw5/image/upload/v1769628785/Parktonian_Black_ttdw7p.png'
              objectFit={'contain'}
-             width={{ base: '12%', md: '8%' }}
+             width={{ base: '25%', md: '10%' }}
             />
         </Box>
 

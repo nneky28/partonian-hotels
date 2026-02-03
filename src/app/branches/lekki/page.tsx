@@ -8,9 +8,9 @@ import { BranchInfoSection } from '@/components/UIs/BranchInfoSection';
 import { RoomsSection } from '@/components/UIs/RoomsSection';
 import { Footer } from '@/components/UIs/footer';
 import { BookingModal } from '@/components/UIs/BookingModal';
-import { MdPool, MdWifi, MdLocalParking, MdPalette, MdBeachAccess, MdShoppingBag, MdKingBed, MdVisibility, MdWork, MdLocalBar, MdSoupKitchen, MdBalcony, MdBreakfastDining, MdBed,MdSquare } from 'react-icons/md';
+import { MdPool, MdWifi, MdPalette, MdBeachAccess, MdShoppingBag, MdKingBed, MdVisibility, MdWork, MdLocalBar, MdBalcony, MdBed, MdSquare, MdFitnessCenter } from 'react-icons/md';
 import { footerSections } from '@/utils/footerSection';
-import { FaConciergeBell } from "react-icons/fa";
+
 
 
 const navLinks = [
@@ -26,48 +26,48 @@ const rooms = [
     id: 'deluxe-room',
     name: 'Deluxe Room',
     price: '₦120,000',
-    image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629704/DSC00341_yv5u3g.jpg',
+    image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629588/DSC00196_tbitbl.jpg',
     badge: { text: 'Popular', color: 'primary' as const },
     description: 'Comfortable and elegant room with modern amenities, perfect for both business and leisure travelers. Rate with breakfast: ₦135,000',
     amenities: [
       { icon: MdKingBed, label: 'King Bed' },
       { icon: MdWifi, label: 'Fast WiFi' },
-      { icon: MdLocalBar, label: 'Mini Bar' },
+      { icon: MdLocalBar, label: 'Work Desk' },
     ],
   },
   {
     id: 'alcove-room',
     name: 'Alcove Room',
     price: '₦140,000',
-    image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629697/DSC00327_pyutml.jpg',
+    image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629602/DSC00245_zetxwp.jpg',
     description: 'Spacious alcove room featuring separate sitting area. Rate with breakfast: ₦155,000',
     amenities: [
       { icon: MdKingBed, label: 'King Bed' },
       { icon: MdVisibility, label: 'City View' },
-      { icon: MdWifi, label: 'Ultra Fast Wifi' },
+      { icon: MdWork, label: 'Work Desk' },
     ],
   },
   {
     id: 'royal-alcove',
     name: 'Royal Alcove',
     price: '₦150,000',
-    image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629638/DSC00316_aj0kwz.jpg',
+    image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629705/DSC00323_vqbjyw.jpg',
     badge: { text: 'Bestseller', color: 'primary' as const },
     description: 'Premium alcove suite with luxurious furnishings. Rate with breakfast: ₦165,000',
     amenities: [
       { icon: MdKingBed, label: 'King Bed' },
       { icon: MdWork, label: 'Work Desk' },
-      { icon: MdBreakfastDining, label: 'Breakfast' },
+      { icon: MdPool, label: 'Pool Access' },
     ],
   },
   {
     id: 'double-room',
     name: 'Double Room',
     price: '₦250,000',
-    image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629638/DSC00307_v8ejxg.jpg',
+    image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629522/DSC00236_ktf3pu.jpg',
     description: 'Spacious double room perfect for families or groups. Rate with breakfast: ₦265,000',
     amenities: [
-      { icon: MdKingBed, label: 'Twin Beds' },
+      { icon: MdBed, label: 'Twin Beds' },
       { icon: MdBalcony, label: 'Balcony' },
       { icon: MdPool, label: 'Pool Access' },
     ],
@@ -76,13 +76,13 @@ const rooms = [
     id: 'executive-suite',
     name: 'Executive Suite',
     price: '₦250,000',
-    image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629620/DSC00255_o0tri1.jpg',
+    image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629540/DSC00232_zhiuz8.jpg',
     badge: { text: 'Ultra Luxury', color: 'gold' as const },
     description: 'Ultimate luxury suite with separate living area and premium amenities. Rate with breakfast: ₦265,000',
     amenities: [
-      { icon: MdSoupKitchen, label: 'Kitchenette' },
-      { icon: FaConciergeBell, label: 'Concierge' },
-      { icon: MdPool, label: 'Pool Access' },
+      { icon: MdKingBed, label: 'King Bed' },
+      { icon: MdVisibility, label: 'City View' },
+      { icon: MdBalcony, label: 'Private Balcony' },
     ],
   },
 ];
@@ -106,6 +106,15 @@ const heroSlides = [
     subtitle: 'Culinary Excellence',
     description: 'From signature cocktails to international cuisine, indulge in a dining experience crafted for perfection.',
   },
+  {
+    image:'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629638/DSC00307_v8ejxg.jpg'
+  },
+  {
+    image:'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629634/DSC00296_gmgsxu.jpg'
+  },
+  {
+    image:'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629638/DSC00316_aj0kwz.jpg'
+  }
 ];
 
 export default function LekkiBranchPage() {
@@ -151,7 +160,7 @@ export default function LekkiBranchPage() {
             {icon: MdBed, label: 'Luxurious Rooms'},
             { icon: MdLocalBar, label: 'Executive Lounge' },
             { icon: MdPool, label: 'Swimming Pool' },
-            { icon: MdLocalParking, label: 'Secure Parking' },
+            { icon: MdFitnessCenter, label: 'Elite Gym' },
           ]}
           attractions={[
             { icon: MdPalette, name: 'Nike Art Gallery', distance: '5 MIN DRIVE' },

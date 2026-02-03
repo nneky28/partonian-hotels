@@ -44,7 +44,7 @@ export const AboutSection = ({ onBookRoom }: AboutSectionProps) => {
           <VStack spacing={6} maxW="3xl">
             <Text
               fontSize={{ base: 'lg', md: 'xl' }}
-              color="white"
+              color="whiteAlpha.700"
               lineHeight="relaxed"
               fontWeight="medium"
             >
@@ -53,7 +53,7 @@ export const AboutSection = ({ onBookRoom }: AboutSectionProps) => {
 
             <Text
               fontSize={{ base: 'md', md: 'lg' }}
-              color="white"
+              color="whiteAlpha.700"
               lineHeight="relaxed"
               fontWeight="medium"
             >
@@ -62,7 +62,7 @@ export const AboutSection = ({ onBookRoom }: AboutSectionProps) => {
 
            <Text
               fontSize={{ base: 'md', md: 'lg' }}
-              color="white"
+              color="whiteAlpha.700"
               lineHeight="relaxed"
               fontWeight="medium"
             >
@@ -70,7 +70,7 @@ export const AboutSection = ({ onBookRoom }: AboutSectionProps) => {
             </Text>
             <Text
               fontSize={{ base: 'md', md: 'lg' }}
-              color="white"
+              color="whiteAlpha.700"
               fontWeight="semibold"
               lineHeight="relaxed"
               pt={4}
