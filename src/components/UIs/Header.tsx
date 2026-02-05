@@ -53,7 +53,7 @@ export const Header = ({ navLinks }: HeaderProps) => {
              sizes="(max-width: 768px) 100px, 150px"
              alt="Parktonian Hotels Logo"
              objectFit={'contain'}
-             width={{ base: '40px', md: '50px' }}
+             width={{ base: '70px', md: '50px' }}
             />
         </Box>
 
@@ -95,7 +95,7 @@ export const Header = ({ navLinks }: HeaderProps) => {
               <Image
                 src='https://res.cloudinary.com/djmwqkcw5/image/upload/v1769628785/Parktonian_Black_ttdw7p.png'
                 objectFit={'contain'}
-                width={'30%'}
+                width={'40%'}
               />
             </DrawerHeader>
 

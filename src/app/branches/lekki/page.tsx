@@ -193,7 +193,7 @@ export default function LekkiBranchPage() {
       <BookingModal
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
-        branchName="Lekki Phase 1"
+        branchName=" Parktonian Hotel Lekki"
       />
     </Box>
   );

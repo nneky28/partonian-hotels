@@ -204,7 +204,7 @@ export default function IkateBranchPage() {
       <BookingModal
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
-        branchName="Parktonian Ikate"
+        branchName="Parktonian HotelIkate"
       />
     </Box>
   );
