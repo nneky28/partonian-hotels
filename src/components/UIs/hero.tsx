@@ -29,7 +29,8 @@ const heroSlides = [
     description: 'Immerse yourself in world-class amenities and personalized service. Where every detail matters and excellence is standard.',
   },
   {
-    backgroundImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD_4vMiLYUo-cNmfUNT2z3LthOtRe08X-EXd2gZRgsQqvfz4BwUejiLukO8Yi8JUj9RHSWuZ88IOAkrvXaA4PX2-FZVBnOG_Jk1ETr2hO1GzmG-EqamW6KAWHLSW36aGQJinYSrxIeIKkPlBPOqv9LcwVAvXhDXMy4DJ_mSlGBoSxkOYgbz1b2evHlMiflnNVidymt_jAK1g7h0Ug-WvhQ8dsSOwwcNa2qDTaIABWtgJVNWbzGWp12uBev3GuEHZckKn_ET-b9rT_M',
+    backgroundImage: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629746/DSC00334_bt55ra.jpg',
+    srcSet: getResponsiveSrcSet('https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629746/DSC00334_bt55ra.jpg'),
     title: 'Your Ultimate',
     highlightedText: 'Destination',
     description: 'From Lagos to Awka, experience hospitality redefined. Book your stay at any of our prestigious locations today.',

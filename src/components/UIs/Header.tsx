@@ -95,7 +95,7 @@ export const Header = ({ navLinks }: HeaderProps) => {
               <Image
                 src='https://res.cloudinary.com/djmwqkcw5/image/upload/v1769628785/Parktonian_Black_ttdw7p.png'
                 objectFit={'contain'}
-                width={'40%'}
+                width={'20%'}
               />
             </DrawerHeader>
 

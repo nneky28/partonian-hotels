@@ -9,7 +9,6 @@ import {
   VStack,
   Icon,
   IconButton,
-  Image,
 } from '@chakra-ui/react';
 import { MdChevronLeft, MdChevronRight, MdGridView } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
@@ -79,8 +78,10 @@ export const BranchHeroSlider = ({
           opacity={currentSlide === index ? 1 : 0}
           transition="opacity 1s ease-in-out"
           bgImage={`url(${slide.image})`}
-          bgSize="cover"
+          bgSize={['contain', 'cover']}
           bgPosition="center"
+          bgRepeat={'no-repeat'}
+          // bgSize={'cover'}
           zIndex={currentSlide === index ? 1 : 0}
           _after={{
             content: '""',
@@ -119,7 +120,7 @@ export const BranchHeroSlider = ({
             {galleryUrl && (
               <Button
                 size="lg"
-                h={14}
+                h={12}
                 px={8}
                 bg="whiteAlpha.100"
                 backdropFilter="blur(10px)"

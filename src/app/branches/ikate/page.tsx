@@ -41,12 +41,12 @@ const rooms = [
   {
     id: "deluxe",
     name: "Deluxe",
-    price: "₦100,000",
-    image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769690851/PI_Deluxe_fupxws.jpg",
-    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769690851/PI_Deluxe_fupxws.jpg"),
+    price: "₦80,000",
+    image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691576/PI_Studio_lkovqm.jpg",
+    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691576/PI_Studio_lkovqm.jpg"),
     badge: { text: "Best Value", color: "primary" as const },
     description:
-      "Comfortable room with modern amenities. Rate with breakfast: ₦95,000",
+      "Comfortable room with modern amenities.",
     amenities: [
       { icon: MdKingBed, label: "King Bed" },
       { icon: MdWifi, label: "Free WiFi" },
@@ -60,7 +60,7 @@ const rooms = [
     image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691596/PI_Alcove_el0weu.jpg",
     srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691596/PI_Alcove_el0weu.jpg"),
     description:
-      "Spacious alcove room with sitting area. Rate with breakfast: ₦105,000",
+      "Spacious alcove room with sitting area.",
     amenities: [
       { icon: MdKingBed, label: "King Bed" },
       { icon: MdVisibility, label: "City View" },
@@ -75,7 +75,7 @@ const rooms = [
     srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691603/PI_Executive_Suite_f0oorc.jpg"),
     badge: { text: "Premium", color: "gold" as const },
     description:
-      "Premium executive room with enhanced amenities. Rate with breakfast: ₦195,000",
+      "Premium executive room with enhanced amenities.",
     amenities: [
       { icon: MdBalcony, label: "Balcony" },
       { icon: MdFreeBreakfast, label: "Breakfast" },

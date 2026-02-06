@@ -52,7 +52,7 @@ export const HeroSlider = ({ slides, autoPlayInterval = 5000 }: HeroSliderProps)
   return (
     <Box
       position="relative"
-      h="90vh"
+      minH="60vh"
       overflow="hidden"
       mt={16}
       display="flex"
@@ -65,19 +65,22 @@ export const HeroSlider = ({ slides, autoPlayInterval = 5000 }: HeroSliderProps)
       {slides.map((slide, index) => (
         <Box
           key={index}
+          as="img"
+          src={slide.backgroundImage}
+          srcSet={slide.srcSet}
+          sizes="100vw"
+          alt={`${slide.title} ${slide.highlightedText}`}
           position="absolute"
           inset={0}
-          bgImage={slide.backgroundImage}
-          bgSize="cover"
+          w="100%"
+          h="100%"
+          objectFit={'cover'}
           bgPosition="center"
+          bgRepeat={'no-repeat'}
           filter="brightness(0.7)"
           opacity={currentSlide === index ? 1 : 0}
           transition="opacity 1s ease-in-out"
-          sx={{
-            '@media (max-width: 768px)': {
-              bgImage: slide.srcSet ? `url(${slide.srcSet.split(',')[0].split(' ')[0]})` : slide.backgroundImage,
-            }
-          }}
+          loading={index === 0 ? 'eager' : 'lazy'}
         />
       ))}
 

@@ -1,7 +1,7 @@
 'use client';
 
-import { Box, VStack, Heading, Text, Grid, GridItem, Flex, Icon, Button } from '@chakra-ui/react';
-import { MdInfo, MdPool, MdWifi, MdFitnessCenter, MdLocalParking } from 'react-icons/md';
+import { Box, VStack, Heading, Text, Grid, Flex, Icon, Button } from '@chakra-ui/react';
+import { MdInfo, } from 'react-icons/md';
 import { IconType } from 'react-icons';
 
 interface Amenity {
@@ -39,8 +39,8 @@ export const BranchInfoSection = ({
       <Box  maxW="1300px" mx="auto">
         <Flex direction={{ base: 'column', lg: 'row' }} gap={16}>
           {/* Main Content */}
-          <Box flex="2">
-            <VStack align="flex-start" spacing={4}>
+          <Box flex="2" >
+            <VStack align="flex-start" spacing={4} >
               <Text color="primaryRed" fontWeight="bold" letterSpacing="widest" textTransform="uppercase" fontSize="xs">
                 {subtitle}
               </Text>
@@ -54,17 +54,19 @@ export const BranchInfoSection = ({
               <Box h={1} w={20} bg="primaryRed" />
             </VStack>
 
-            <VStack spacing={6} align="flex-start" mt={8}>
+            <VStack spacing={6} align={['center',"flex-start"]} mt={8} >
               {description.map((para, idx) => (
                 <Text key={idx} color="whiteAlpha.700" fontSize="lg" lineHeight="relaxed" maxW="2xl">
                   {para}
                 </Text>
               ))}
 
-              <Grid templateColumns="repeat(2, 1fr)" gap={8} pt={8} borderTop="1px" borderColor="whiteAlpha.100" w="full" maxW="2xl">
+              <Flex gap={8} pt={8} borderTop="1px" borderColor="whiteAlpha.100" w="full" maxW="2xl"
+            
+               >
                 {stats.map((stat, idx) => (
                   <Flex key={idx} align="center" gap={4}>
-                    <Text fontSize="4xl" fontWeight="bold" color="primaryRed">
+                    <Text fontSize={["2xl","4xl"]} fontWeight="bold" color="primaryRed">
                       {stat.value}
                     </Text>
                     <Text
@@ -77,7 +79,8 @@ export const BranchInfoSection = ({
                     />
                   </Flex>
                 ))}
-              </Grid>
+              </Flex>
+              
             </VStack>
           </Box>
 

@@ -28,7 +28,7 @@ const rooms = [
     image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629588/DSC00196_tbitbl.jpg',
     srcSet: getResponsiveSrcSet('https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629588/DSC00196_tbitbl.jpg'),
     badge: { text: 'Popular', color: 'primary' as const },
-    description: 'Comfortable and elegant room with modern amenities, perfect for both business and leisure travelers. Rate with breakfast: ₦135,000',
+    description: 'Comfortable and elegant room with modern amenities, perfect for both business and leisure travelers.',
     amenities: [
       { icon: MdKingBed, label: 'King Bed' },
       { icon: MdWifi, label: 'Fast WiFi' },
@@ -41,7 +41,7 @@ const rooms = [
     price: '₦140,000',
     image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629602/DSC00245_zetxwp.jpg',
     srcSet: getResponsiveSrcSet('https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629602/DSC00245_zetxwp.jpg'),
-    description: 'Spacious alcove room featuring separate sitting area. Rate with breakfast: ₦155,000',
+    description: 'Spacious alcove room featuring separate sitting area.',
     amenities: [
       { icon: MdKingBed, label: 'King Bed' },
       { icon: MdVisibility, label: 'City View' },
@@ -55,7 +55,7 @@ const rooms = [
     image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629705/DSC00323_vqbjyw.jpg',
     srcSet: getResponsiveSrcSet('https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629705/DSC00323_vqbjyw.jpg'),
     badge: { text: 'Bestseller', color: 'primary' as const },
-    description: 'Premium alcove suite with luxurious furnishings. Rate with breakfast: ₦165,000',
+    description: 'Premium alcove suite with luxurious furnishings.',
     amenities: [
       { icon: MdKingBed, label: 'King Bed' },
       { icon: MdWork, label: 'Work Desk' },
@@ -68,7 +68,7 @@ const rooms = [
     price: '₦250,000',
     image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629522/DSC00236_ktf3pu.jpg',
     srcSet: getResponsiveSrcSet('https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629522/DSC00236_ktf3pu.jpg'),
-    description: 'Spacious double room perfect for families or groups. Rate with breakfast: ₦265,000',
+    description: 'Spacious double room perfect for families or groups.',
     amenities: [
       { icon: MdBed, label: 'Twin Beds' },
       { icon: MdBalcony, label: 'Balcony' },
@@ -82,7 +82,7 @@ const rooms = [
     image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629540/DSC00232_zhiuz8.jpg',
     srcSet: getResponsiveSrcSet('https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629540/DSC00232_zhiuz8.jpg'),
     badge: { text: 'Ultra Luxury', color: 'gold' as const },
-    description: 'Ultimate luxury suite with separate living area and premium amenities. Rate with breakfast: ₦265,000',
+    description: 'Ultimate luxury suite with separate living area and premium amenities.',
     amenities: [
       { icon: MdKingBed, label: 'King Bed' },
       { icon: MdVisibility, label: 'City View' },
