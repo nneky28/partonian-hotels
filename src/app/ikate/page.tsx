@@ -32,9 +32,9 @@ import { getResponsiveSrcSet } from "@/utils/imageUtils";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  { label: "Lekki", href: "/branches/lekki" },
-  { label: "Ikate", href: "/branches/ikate" },
-  { label: "Awka", href: "/branches/awka" },
+  { label: "Lekki", href: "/lekki" },
+  { label: "Ikate", href: "/ikate" },
+  { label: "Awka", href: "/awka" },
 ];
 
 const rooms = [
@@ -83,6 +83,11 @@ const rooms = [
     ],
   },
 ];
+
+const roomPrices = rooms.reduce((acc, room) => {
+  acc[room.name] = Number(String(room.price).replace(/[^\d]/g, ""));
+  return acc;
+}, {} as Record<string, number>);
 
 const heroSlides = [
     {
@@ -144,7 +149,7 @@ export default function IkateBranchPage() {
       <Box as="main" flex={1}>
         <BranchHeroSlider
           slides={heroSlides}
-          galleryUrl="/branches/ikate/gallery"
+          galleryUrl="/ikate/gallery"
           onBookNow={() => setIsBookingModalOpen(true)}
         />
 
@@ -204,7 +209,8 @@ export default function IkateBranchPage() {
       <BookingModal
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
-        branchName="Parktonian HotelIkate"
+        branchName="Parktonian Hotel Ikate"
+        roomPrices={roomPrices}
       />
     </Box>
   );

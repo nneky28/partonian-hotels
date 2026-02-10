@@ -88,7 +88,7 @@ export default function IkateGalleryPage() {
     <GalleryPage
       branchName="Parktonian Ikate"
       images={ikateGalleryImages}
-      backUrl="/branches/ikate"
+      backUrl="/ikate"
     />
   );
 }

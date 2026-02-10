@@ -28,9 +28,9 @@ import { getResponsiveSrcSet } from "@/utils/imageUtils";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  { label: "Lekki", href: "/branches/lekki" },
-  { label: "Ikate", href: "/branches/ikate" },
-  { label: "Awka", href: "/branches/awka" },
+  { label: "Lekki", href: "/lekki" },
+  { label: "Ikate", href: "/ikate" },
+  { label: "Awka", href: "/awka" },
 ];
 
 const rooms = [
@@ -118,6 +118,11 @@ const rooms = [
   },
 ];
 
+const roomPrices = rooms.reduce((acc, room) => {
+  acc[room.name] = Number(String(room.price).replace(/[^\d]/g, ""));
+  return acc;
+}, {} as Record<string, number>);
+
 const heroSlides = [
     {
     image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692041/IMG_20220628_054302_pdgakm.jpg",
@@ -173,7 +178,7 @@ export default function AwkaBranchPage() {
       <Box as="main" flex={1}>
         <BranchHeroSlider
           slides={heroSlides}
-          galleryUrl="/branches/awka/gallery"
+          galleryUrl="/awka/gallery"
           onBookNow={() => setIsBookingModalOpen(true)}
         />
 
@@ -218,6 +223,7 @@ export default function AwkaBranchPage() {
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
         branchName="Parktonian Hotel Awka"
+        roomPrices={roomPrices}
       />
     </Box>
   );

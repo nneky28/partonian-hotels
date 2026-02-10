@@ -39,7 +39,7 @@ export const Footer = ({ sections }: FooterProps) => {
         <Flex
           direction={{ base: "column", md: "row" }}
           justify="space-between"
-          gap={{ base: 8, md: 12 }}
+          gap={{ base: 8, md: 8 }}
           mb={20}
         >
 
@@ -99,12 +99,12 @@ export const Footer = ({ sections }: FooterProps) => {
                 letterSpacing="wider"
                 fontSize="sm"
                 color="primaryRed"
-                mb={6}
+                mb={2}
                 fontFamily="body"
               >
                 {section.title}
               </Heading>
-              <VStack align="flex-start" spacing={4}>
+              <VStack align="flex-start" spacing={1}>
                 {section.description.map((link) => (
                   <Text
                     key={link.label}

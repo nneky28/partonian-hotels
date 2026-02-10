@@ -30,12 +30,9 @@ export const AboutSection = ({ onBookRoom }: AboutSectionProps) => {
             </Text>
             <Heading
               as="h2"
-              fontSize={{ base: '3xl', md: '5xl' }}
-              fontFamily="heading"
-              fontWeight="bold"
               mb={8}
               lineHeight="1.2"
-              color="primaryRed"
+               color="whiteBase"
             >
               Parktonian Hotels
             </Heading>

@@ -94,7 +94,7 @@ export default function LekkiGalleryPage() {
     <GalleryPage
       branchName="Parktonian Lekki"
       images={lekkiGalleryImages}
-      backUrl="/branches/lekki"
+      backUrl="/lekki"
     />
   );
 }

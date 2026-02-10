@@ -26,10 +26,11 @@ export const BranchesSection = ({ branches, onExploreBranch }: BranchesSectionPr
           </Text>
           <Heading
             as="h3"
-            fontSize={{ base: '4xl', md: '6xl' }}
+            fontSize={{ base: '3xl', md: '5xl' }}
             fontFamily="heading"
             fontWeight="bold"
-            color="primaryRed"
+            color="whiteBase"
+            lineHeight="1.2"
           >
            Iconic Branches
           </Heading>

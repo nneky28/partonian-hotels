@@ -38,8 +38,8 @@ const heroSlides = [
   {
     backgroundImage: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1770115114/DSC00304_txnbii.jpg',
     srcSet: getResponsiveSrcSet('https://res.cloudinary.com/djmwqkcw5/image/upload/v1770115114/DSC00304_txnbii.jpg'),
-    title: 'Excellence Meets',
-    highlightedText: 'Luxury',
+    title: 'Redefining',
+    highlightedText: 'Excellence',
     description: 'Immerse yourself in world-class amenities and personalized service. Where every detail matters and excellence is standard.',
   },
   {
@@ -60,9 +60,9 @@ const heroSlides = [
 
 const navLinks = [
   { label: 'Home', href: '/' },
-  { label: 'Lekki', href: '/branches/lekki' },
-  { label: 'Ikate', href: '/branches/ikate' },
-  { label: 'Awka', href: '/branches/awka' },
+  { label: 'Lekki', href: '/lekki' },
+  { label: 'Ikate', href: '/ikate' },
+  { label: 'Awka', href: '/awka' },
 ];
 
 const branches: Branch[] = [
@@ -101,7 +101,7 @@ const Hero = () => {
   };
 
   const handleExploreBranch = (id: string) => {
-    router.push(`/branches/${id}`);
+    router.push(`/${id}`);
   };
 
 

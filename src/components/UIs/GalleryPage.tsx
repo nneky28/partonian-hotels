@@ -137,6 +137,7 @@ export const GalleryPage = ({ branchName, images, backUrl }: GalleryPageProps) =
               bg="#0D0D0D"
               cursor="pointer"
               role="group"
+              borderRadius={'10px'}
             >
               <Image
                 src={image.url}

@@ -94,7 +94,7 @@ export default function AwkaGalleryPage() {
     <GalleryPage
       branchName="Parktonian Awka"
       images={awkaGalleryImages}
-      backUrl="/branches/awka"
+      backUrl="/awka"
     />
   );
 }

@@ -52,7 +52,7 @@ export const HeroSlider = ({ slides, autoPlayInterval = 5000 }: HeroSliderProps)
   return (
     <Box
       position="relative"
-      minH="60vh"
+      h={{ base: '80vh', md: '85vh' }}
       overflow="hidden"
       mt={16}
       display="flex"
@@ -161,6 +161,7 @@ export const HeroSlider = ({ slides, autoPlayInterval = 5000 }: HeroSliderProps)
           mx="auto"
           fontWeight="light"
           lineHeight="relaxed"
+          display={['none','flex']}
         >
           {currentSlideData.description}
         </Text>

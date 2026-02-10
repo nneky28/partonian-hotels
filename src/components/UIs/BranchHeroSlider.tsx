@@ -68,7 +68,7 @@ export const BranchHeroSlider = ({
   };
 
   return (
-    <Box position="relative" h={{ base: '80vh', md: '90vh' }} overflow="hidden">
+    <Box position="relative" h={{ base: '60vh', md: '80vh' }} overflow="hidden">
       {/* Background Images */}
       {slides.map((slide, index) => (
         <Box
@@ -81,7 +81,6 @@ export const BranchHeroSlider = ({
           bgSize={['contain', 'cover']}
           bgPosition="center"
           bgRepeat={'no-repeat'}
-          // bgSize={'cover'}
           zIndex={currentSlide === index ? 1 : 0}
           _after={{
             content: '""',
@@ -96,13 +95,13 @@ export const BranchHeroSlider = ({
       {/* Content */}
       <Container
         maxW="1300px"
-        h="full"
         position="relative"
         zIndex={2}
         display="flex"
         flexDirection="column"
         justifyContent="flex-end"
         pb={20}
+        h={'full'}
       >
         <VStack
           align="flex-start"

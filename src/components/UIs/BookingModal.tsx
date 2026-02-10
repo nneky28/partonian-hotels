@@ -26,6 +26,11 @@ import {
   Image,
   useToast,
   FormErrorMessage,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  PopoverArrow,
 } from "@chakra-ui/react";
 import {
   MdCalendarMonth,
@@ -60,6 +65,8 @@ export const BookingModal = ({
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCheckInCalendarOpen, setIsCheckInCalendarOpen] = useState(false);
+  const [isCheckOutCalendarOpen, setIsCheckOutCalendarOpen] = useState(false);
 
   // Default room prices if not provided
   const defaultRoomPrices: Record<string, number> = {
@@ -156,27 +163,28 @@ export const BookingModal = ({
   }, [currentMonth]);
 
   // Handle date selection
-  const handleDateClick = (date: Date) => {
+  const handleDateClick = (date: Date, isForCheckIn: boolean) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
     // Don't allow selecting past dates
     if (date < today) return;
 
-    if (!checkInDate || (checkInDate && checkOutDate)) {
-      // First click or reset
+    if (isForCheckIn) {
       setCheckInDate(date);
-      setCheckOutDate(null);
+      // If checkout is before new checkin, reset it
+      if (checkOutDate && date >= checkOutDate) {
+        setCheckOutDate(null);
+      }
       setErrors({ ...errors, dates: "", checkIn: "", checkOut: "" });
-    } else if (date > checkInDate) {
-      // Second click - set checkout
-      setCheckOutDate(date);
-      setErrors({ ...errors, dates: "", checkIn: "", checkOut: "" });
+      setIsCheckInCalendarOpen(false);
     } else {
-      // Selected date is before check-in, reset
-      setCheckInDate(date);
-      setCheckOutDate(null);
-      setErrors({ ...errors, dates: "", checkIn: "", checkOut: "" });
+      // For checkout, only allow dates after checkin
+      if (checkInDate && date > checkInDate) {
+        setCheckOutDate(date);
+        setErrors({ ...errors, dates: "", checkIn: "", checkOut: "" });
+        setIsCheckOutCalendarOpen(false);
+      }
     }
   };
 
@@ -200,6 +208,7 @@ export const BookingModal = ({
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
 
+    // Date validation
     if (!checkInDate) {
       newErrors.checkIn = "Please select check-in date";
     }
@@ -212,6 +221,28 @@ export const BookingModal = ({
       newErrors.dates = "Check-out must be after check-in";
     }
 
+    // Name validation
+    if (!fullName || fullName.trim().length < 2) {
+      newErrors.fullName = "Please enter a valid full name";
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    // Phone validation (must contain at least 10 digits)
+    const phoneDigits = phone.replace(/\D/g, '');
+    if (!phone || phoneDigits.length < 10) {
+      newErrors.phone = "Please enter a valid phone number (at least 10 digits)";
+    }
+
+    // Room type validation
+    if (!roomType) {
+      newErrors.roomType = "Please select a room type";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -219,8 +250,12 @@ export const BookingModal = ({
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    console.log('=== BOOKING SUBMISSION STARTED ===');
+    console.log('Timestamp:', new Date().toISOString());
 
     if (!validateForm()) {
+      console.log('❌ Form validation failed');
       toast({
         title: "Validation Error",
         description: "Please fill in all required fields correctly",
@@ -230,43 +265,24 @@ export const BookingModal = ({
       });
       return;
     }
-
-    if (!fullName || !email || !phone) {
-      toast({
-        title: "Missing Information",
-        description: "Please provide your contact details",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    if (!roomType) {
-      toast({
-        title: "Missing Information",
-        description: "Please select a room type",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
-    }
+    
+    console.log('✓ Form validation passed');
+    //parktonianhotels@yahoo.com
 
     setIsSubmitting(true);
 
     try {
+      console.log('Starting booking submission...');
+
       const formatDateForSubmission = (date: Date) => {
         return date.toISOString().split('T')[0];
       };
 
       const bookingData = {
-        // Hard-code for Smartweb deployment
-        token: 'prod_YOUR_ACTUAL_PRODUCTION_TOKEN_HERE',
-        branchName,
         fullName,
         email,
         phone,
+        branchName,
         checkInDate: checkInDate ? formatDateForSubmission(checkInDate) : '',
         checkOutDate: checkOutDate ? formatDateForSubmission(checkOutDate) : '',
         numberOfNights,
@@ -274,46 +290,33 @@ export const BookingModal = ({
         roomRate: formatCurrency(roomRatePerNight),
         totalPrice: formatCurrency(totalPrice),
       };
-
-      // Hard-code URL for Smartweb
-      const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_PRODUCTION_URL_HERE/exec';
-
-      if (!APPS_SCRIPT_URL) {
-        throw new Error('Apps Script URL not configured');
-      }
-
-      // Create a form and submit it to avoid CORS issues
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = APPS_SCRIPT_URL;
-      form.target = 'hidden_iframe';
       
-      // Create hidden iframe to receive response
-      let iframe = document.getElementById('hidden_iframe') as HTMLIFrameElement;
-      if (!iframe) {
-        iframe = document.createElement('iframe');
-        iframe.id = 'hidden_iframe';
-        iframe.name = 'hidden_iframe';
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
-      }
+      console.log('Booking data prepared:', bookingData);
+
+      // Use development token by default (matches API_SECRETS in route.ts)
+      const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN || 'dev_7993d852fcc630829d805ad06ecc8712a73fe0f52869f51c78fd7b18602768cd';
       
-      // Add data as hidden inputs
-      Object.entries(bookingData).forEach(([key, value]) => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = String(value);
-        form.appendChild(input);
+      console.log('Sending booking to API...');
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${API_TOKEN}`,
+        },
+        body: JSON.stringify(bookingData),
       });
+
+      console.log('API response status:', response.status);
       
-      document.body.appendChild(form);
-      form.submit();
-      document.body.removeChild(form);
+      const result = await response.json();
+      console.log('API response:', result);
 
-      // Wait a moment for submission
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Failed to submit booking');
+      }
 
+      console.log('✓ Booking submission complete');
+      
       toast({
         title: "Booking Submitted!",
         description: "We'll contact you shortly to confirm your reservation.",
@@ -324,7 +327,12 @@ export const BookingModal = ({
       handleClose();
 
     } catch (error) {
-      console.error('Booking submission error:', error);
+      console.error('❌ Booking submission error:', error);
+      console.error('Error details:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      });
+      
       toast({
         title: "Submission Failed",
         description: "Unable to submit booking. Please try again or contact us directly.",
@@ -333,6 +341,7 @@ export const BookingModal = ({
         isClosable: true,
       });
     } finally {
+      console.log('Setting isSubmitting to false');
       setIsSubmitting(false);
     }
   };
@@ -348,8 +357,136 @@ export const BookingModal = ({
     setPhone("");
     setErrors({});
     setCurrentMonth(new Date());
+    setIsCheckInCalendarOpen(false);
+    setIsCheckOutCalendarOpen(false);
     onClose();
   };
+
+  // Calendar component for reuse
+  const renderCalendar = (isForCheckIn: boolean) => (
+    <VStack spacing={4} align="stretch">
+      {/* Month Navigation */}
+      <Flex justify="space-between" align="center">
+        <IconButton
+          aria-label="Previous month"
+          icon={<MdChevronLeft />}
+          variant="ghost"
+          size="sm"
+          _hover={{ bg: "whiteAlpha.100" }}
+          onClick={goToPreviousMonth}
+          isDisabled={!canGoPrevious}
+        />
+        <Text fontWeight="bold" fontSize="md">
+          {currentMonth.toLocaleDateString("en-US", {
+            month: "long",
+            year: "numeric",
+          })}
+        </Text>
+        <IconButton
+          aria-label="Next month"
+          icon={<MdChevronRight />}
+          variant="ghost"
+          size="sm"
+          _hover={{ bg: "whiteAlpha.100" }}
+          onClick={goToNextMonth}
+        />
+      </Flex>
+
+      {/* Calendar Grid */}
+      <Grid templateColumns="repeat(7, 1fr)" gap={1}>
+        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+          <Text
+            key={day}
+            color="whiteAlpha.400"
+            fontSize="xs"
+            fontWeight="bold"
+            textTransform="uppercase"
+            textAlign="center"
+            h={8}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            {day.slice(0, 3)}
+          </Text>
+        ))}
+
+        {/* Calendar days */}
+        {calendarDays.map((date, index) => {
+          if (!date) {
+            return <Box key={`empty-${index}`} h={10} />;
+          }
+
+          const isSelected = isDateSelected(date);
+          const isInRange = isDateInRange(date);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const isPast = date < today;
+          const isCheckIn = checkInDate && date.toDateString() === checkInDate.toDateString();
+          const isCheckOut = checkOutDate && date.toDateString() === checkOutDate.toDateString();
+          
+          // For checkout calendar, disable dates before or equal to checkin
+          const isDisabledForCheckout = !isForCheckIn && !!checkInDate && date <= checkInDate;
+
+          const isButtonDisabled = isPast || isDisabledForCheckout;
+          
+          return (
+            <Button
+              key={index}
+              h={10}
+              fontSize="sm"
+              fontWeight="medium"
+              bg={
+                isSelected
+                  ? "primaryRed"
+                  : isInRange
+                    ? "rgba(234, 42, 51, 0.3)"
+                    : "transparent"
+              }
+              color={isButtonDisabled ? "whiteAlpha.300" : "white"}
+              borderRadius={
+                isCheckIn
+                  ? "lg 0 0 lg"
+                  : isCheckOut
+                    ? "0 lg lg 0"
+                    : "lg"
+              }
+              _hover={{
+                bg: isButtonDisabled
+                  ? undefined
+                  : isSelected
+                    ? "red.600"
+                    : "whiteAlpha.100",
+              }}
+              _disabled={{
+                opacity: 0.3,
+                cursor: "not-allowed",
+                bg: "transparent",
+              }}
+              onClick={() => handleDateClick(date, isForCheckIn)}
+              isDisabled={isButtonDisabled}
+              minW={0}
+              p={0}
+            >
+              {date.getDate()}
+            </Button>
+          );
+        })}
+      </Grid>
+
+      {/* Legend */}
+      <HStack spacing={4} pt={2} fontSize="xs" justify="center">
+        <HStack spacing={1}>
+          <Box w={3} h={3} bg="primaryRed" borderRadius="sm" />
+          <Text color="whiteAlpha.600">Selected</Text>
+        </HStack>
+        <HStack spacing={1}>
+          <Box w={3} h={3} bg="rgba(234, 42, 51, 0.3)" borderRadius="sm" />
+          <Text color="whiteAlpha.600">In Range</Text>
+        </HStack>
+      </HStack>
+    </VStack>
+  );
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size="6xl" isCentered>
@@ -401,7 +538,7 @@ export const BookingModal = ({
           </HStack>
         </ModalHeader>
 
-        <ModalBody px={{ base: 4, md: 10 }} py={8} overflowY="auto">
+        <ModalBody px={{ base: 4, md: 10 }} py={8} overflowY="auto" pb={{ base: 6, md: 8 }}>
           <form onSubmit={handleSubmit}>
             <VStack align="stretch" spacing={8}>
               {/* Section Header */}
@@ -432,13 +569,68 @@ export const BookingModal = ({
                 {/* Form Fields Side */}
                 <GridItem>
                   <VStack spacing={6}>
-                    {/* Check-in / Check-out Display */}
+                    {/* Check-in / Check-out Display with Popover Calendars on Mobile, Static on Desktop */}
                     <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full">
                       <FormControl isInvalid={!!errors.checkIn}>
                         <FormLabel fontSize="sm" fontWeight="medium">
                           Check-in Date
                         </FormLabel>
+                        {/* Mobile: Popover, Desktop: Static display */}
+                        <Box display={{ base: "block", lg: "none" }}>
+                          <Popover
+                            isOpen={isCheckInCalendarOpen}
+                            onClose={() => setIsCheckInCalendarOpen(false)}
+                            placement="bottom-start"
+                            closeOnBlur={true}
+                          >
+                            <PopoverTrigger>
+                              <Box
+                                position="relative"
+                                bg="surfaceBlack"
+                                border="1px"
+                                borderColor={
+                                  errors.checkIn ? "red.500" : "whiteAlpha.200"
+                                }
+                                h={14}
+                                borderRadius="md"
+                                display="flex"
+                                alignItems="center"
+                                px={4}
+                                cursor="pointer"
+                                onClick={() => setIsCheckInCalendarOpen(true)}
+                                _hover={{ borderColor: "primaryRed" }}
+                                transition="border-color 0.2s"
+                              >
+                                <Text
+                                  color={checkInDate ? "white" : "whiteAlpha.400"}
+                                >
+                                  {formatDate(checkInDate)}
+                                </Text>
+                                <Icon
+                                  as={MdCalendarMonth}
+                                  position="absolute"
+                                  right={4}
+                                  color="whiteAlpha.400"
+                                  boxSize={6}
+                                />
+                              </Box>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              bg="surfaceBlack"
+                              borderColor="whiteAlpha.200"
+                              w={{ base: "340px", md: "380px" }}
+                              shadow="2xl"
+                            >
+                              <PopoverArrow bg="surfaceBlack" />
+                              <PopoverBody p={4}>
+                                {renderCalendar(true)}
+                              </PopoverBody>
+                            </PopoverContent>
+                          </Popover>
+                        </Box>
+                        {/* Desktop: Static display */}
                         <Box
+                          display={{ base: "none", lg: "flex" }}
                           position="relative"
                           bg="surfaceBlack"
                           border="1px"
@@ -447,10 +639,8 @@ export const BookingModal = ({
                           }
                           h={14}
                           borderRadius="md"
-                          display="flex"
                           alignItems="center"
                           px={4}
-                          cursor="pointer"
                         >
                           <Text
                             color={checkInDate ? "white" : "whiteAlpha.400"}
@@ -472,7 +662,62 @@ export const BookingModal = ({
                         <FormLabel fontSize="sm" fontWeight="medium">
                           Check-out Date
                         </FormLabel>
+                        {/* Mobile: Popover */}
+                        <Box display={{ base: "block", lg: "none" }}>
+                          <Popover
+                            isOpen={isCheckOutCalendarOpen}
+                            onClose={() => setIsCheckOutCalendarOpen(false)}
+                            placement="bottom-start"
+                            closeOnBlur={true}
+                          >
+                            <PopoverTrigger>
+                              <Box
+                                position="relative"
+                                bg="surfaceBlack"
+                                border="1px"
+                                borderColor={
+                                  errors.checkOut ? "red.500" : "whiteAlpha.200"
+                                }
+                                h={14}
+                                borderRadius="md"
+                                display="flex"
+                                alignItems="center"
+                                px={4}
+                                cursor="pointer"
+                                onClick={() => setIsCheckOutCalendarOpen(true)}
+                                _hover={{ borderColor: "primaryRed" }}
+                                transition="border-color 0.2s"
+                              >
+                                <Text
+                                  color={checkOutDate ? "white" : "whiteAlpha.400"}
+                                >
+                                  {formatDate(checkOutDate)}
+                                </Text>
+                                <Icon
+                                  as={MdCalendarMonth}
+                                  position="absolute"
+                                  right={4}
+                                  color="whiteAlpha.400"
+                                  boxSize={6}
+                                />
+                              </Box>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              bg="surfaceBlack"
+                              borderColor="whiteAlpha.200"
+                              w={{ base: "340px", md: "380px" }}
+                              shadow="2xl"
+                            >
+                              <PopoverArrow bg="surfaceBlack" />
+                              <PopoverBody p={4}>
+                                {renderCalendar(false)}
+                              </PopoverBody>
+                            </PopoverContent>
+                          </Popover>
+                        </Box>
+                        {/* Desktop: Static display */}
                         <Box
+                          display={{ base: "none", lg: "flex" }}
                           position="relative"
                           bg="surfaceBlack"
                           border="1px"
@@ -481,10 +726,8 @@ export const BookingModal = ({
                           }
                           h={14}
                           borderRadius="md"
-                          display="flex"
                           alignItems="center"
                           px={4}
-                          cursor="pointer"
                         >
                           <Text
                             color={checkOutDate ? "white" : "whiteAlpha.400"}
@@ -504,14 +747,19 @@ export const BookingModal = ({
                     </Grid>
 
                     {/* Room Type */}
-                    <FormControl isRequired>
+                    <FormControl isRequired isInvalid={!!errors.roomType}>
                       <FormLabel fontSize="sm" fontWeight="medium">
                         Room Type
                       </FormLabel>
                       <Select
                         placeholder="Select room type"
                         value={roomType}
-                        onChange={(e) => setRoomType(e.target.value)}
+                        onChange={(e) => {
+                          setRoomType(e.target.value);
+                          if (errors.roomType) {
+                            setErrors({ ...errors, roomType: "" });
+                          }
+                        }}
                         bg="surfaceBlack"
                         border="1px"
                         borderColor="whiteAlpha.200"
@@ -524,16 +772,22 @@ export const BookingModal = ({
                           </option>
                         ))}
                       </Select>
+                      <FormErrorMessage>{errors.roomType}</FormErrorMessage>
                     </FormControl>
 
                     {/* Contact Information */}
-                    <FormControl isRequired>
+                    <FormControl isRequired isInvalid={!!errors.fullName}>
                       <FormLabel fontSize="sm" fontWeight="medium">
                         Full Name
                       </FormLabel>
                       <Input
                         value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
+                        onChange={(e) => {
+                          setFullName(e.target.value);
+                          if (errors.fullName) {
+                            setErrors({ ...errors, fullName: "" });
+                          }
+                        }}
                         placeholder="Enter your full name"
                         bg="surfaceBlack"
                         border="1px"
@@ -541,16 +795,22 @@ export const BookingModal = ({
                         h={14}
                         _focus={{ ring: 2, ringColor: "primaryRed" }}
                       />
+                      <FormErrorMessage>{errors.fullName}</FormErrorMessage>
                     </FormControl>
 
-                    <FormControl isRequired>
+                    <FormControl isRequired isInvalid={!!errors.email}>
                       <FormLabel fontSize="sm" fontWeight="medium">
                         Email Address
                       </FormLabel>
                       <Input
                         type="email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          if (errors.email) {
+                            setErrors({ ...errors, email: "" });
+                          }
+                        }}
                         placeholder="your.email@example.com"
                         bg="surfaceBlack"
                         border="1px"
@@ -558,23 +818,31 @@ export const BookingModal = ({
                         h={14}
                         _focus={{ ring: 2, ringColor: "primaryRed" }}
                       />
+                      <FormErrorMessage>{errors.email}</FormErrorMessage>
                     </FormControl>
 
-                    <FormControl isRequired>
+                    <FormControl isRequired isInvalid={!!errors.phone}>
                       <FormLabel fontSize="sm" fontWeight="medium">
                         Phone Number
                       </FormLabel>
                       <Input
                         type="tel"
                         value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="+234 xxx xxx xxxx"
+                        onChange={(e) => {
+                          setPhone(e.target.value);
+                          if (errors.phone) {
+                            setErrors({ ...errors, phone: "" });
+                          }
+                        }}
+                        placeholder="Enter phone number"
+                        maxLength={11}
                         bg="surfaceBlack"
                         border="1px"
                         borderColor="whiteAlpha.200"
                         h={14}
                         _focus={{ ring: 2, ringColor: "primaryRed" }}
                       />
+                      <FormErrorMessage>{errors.phone}</FormErrorMessage>
                     </FormControl>
 
                     {/* Price Summary */}
@@ -621,13 +889,12 @@ export const BookingModal = ({
                   </VStack>
                 </GridItem>
 
-                {/* Calendar Side - Now visible on mobile */}
+                {/* Calendar Side - Desktop Only */}
                 <GridItem
-                  borderLeft={{ base: "none", lg: "1px" }}
-                  borderTop={{ base: "1px", lg: "none" }}
+                  display={{ base: "none", lg: "block" }}
+                  borderLeft="1px"
                   borderColor="whiteAlpha.100"
-                  pl={{ base: 0, lg: 10 }}
-                  pt={{ base: 8, lg: 0 }}
+                  pl={10}
                 >
                   <VStack spacing={4} align="stretch">
                     <Text fontSize="sm" fontWeight="medium">
@@ -645,7 +912,7 @@ export const BookingModal = ({
                         onClick={goToPreviousMonth}
                         isDisabled={!canGoPrevious}
                       />
-                      <Text fontWeight="bold" fontSize={{ base: "sm", md: "md" }}>
+                      <Text fontWeight="bold" fontSize="md">
                         {currentMonth.toLocaleDateString("en-US", {
                           month: "long",
                           year: "numeric",
@@ -662,17 +929,17 @@ export const BookingModal = ({
                     </Flex>
 
                     {/* Calendar Grid */}
-                    <Grid templateColumns="repeat(7, 1fr)" gap={{ base: 0.5, md: 1 }}>
+                    <Grid templateColumns="repeat(7, 1fr)" gap={1}>
                       {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
                         (day) => (
                           <Text
                             key={day}
                             color="whiteAlpha.400"
-                            fontSize={{ base: "9px", md: "11px" }}
+                            fontSize="11px"
                             fontWeight="bold"
                             textTransform="uppercase"
                             textAlign="center"
-                            h={{ base: 8, md: 10 }}
+                            h={10}
                             display="flex"
                             alignItems="center"
                             justifyContent="center"
@@ -685,7 +952,7 @@ export const BookingModal = ({
                       {/* Calendar days */}
                       {calendarDays.map((date, index) => {
                         if (!date) {
-                          return <Box key={`empty-${index}`} h={{ base: 10, md: 12 }} />;
+                          return <Box key={`empty-${index}`} h={12} />;
                         }
 
                         const isSelected = isDateSelected(date);
@@ -699,8 +966,8 @@ export const BookingModal = ({
                         return (
                           <Button
                             key={index}
-                            h={{ base: 10, md: 12 }}
-                            fontSize={{ base: "xs", md: "sm" }}
+                            h={12}
+                            fontSize="sm"
                             fontWeight="medium"
                             bg={
                               isSelected
@@ -724,7 +991,24 @@ export const BookingModal = ({
                                   ? "red.600"
                                   : "whiteAlpha.100",
                             }}
-                            onClick={() => !isPast && handleDateClick(date)}
+                            onClick={() => {
+                              if (isPast) return;
+                              const today = new Date();
+                              today.setHours(0, 0, 0, 0);
+                              
+                              if (!checkInDate || (checkInDate && checkOutDate)) {
+                                setCheckInDate(date);
+                                setCheckOutDate(null);
+                                setErrors({ ...errors, dates: "", checkIn: "", checkOut: "" });
+                              } else if (date > checkInDate) {
+                                setCheckOutDate(date);
+                                setErrors({ ...errors, dates: "", checkIn: "", checkOut: "" });
+                              } else {
+                                setCheckInDate(date);
+                                setCheckOutDate(null);
+                                setErrors({ ...errors, dates: "", checkIn: "", checkOut: "" });
+                              }
+                            }}
                             isDisabled={isPast}
                             cursor={isPast ? "not-allowed" : "pointer"}
                             opacity={isPast ? 0.3 : 1}
@@ -738,10 +1022,10 @@ export const BookingModal = ({
                     </Grid>
 
                     {/* Legend */}
-                    <HStack spacing={{ base: 2, md: 4 }} pt={4} fontSize="xs" justify="center">
+                    <HStack spacing={4} pt={4} fontSize="xs" justify="center">
                       <HStack spacing={1}>
                         <Box w={3} h={3} bg="primaryRed" borderRadius="sm" />
-                        <Text color="whiteAlpha.600" fontSize={{ base: "10px", md: "xs" }}>Selected</Text>
+                        <Text color="whiteAlpha.600" fontSize="xs">Selected</Text>
                       </HStack>
                       <HStack spacing={1}>
                         <Box
@@ -750,7 +1034,7 @@ export const BookingModal = ({
                           bg="rgba(234, 42, 51, 0.3)"
                           borderRadius="sm"
                         />
-                        <Text color="whiteAlpha.600" fontSize={{ base: "10px", md: "xs" }}>In Range</Text>
+                        <Text color="whiteAlpha.600" fontSize="xs">In Range</Text>
                       </HStack>
                     </HStack>
                   </VStack>
@@ -762,22 +1046,25 @@ export const BookingModal = ({
 
         {/* Footer */}
         <ModalFooter
-          p={10}
+          p={{ base: 4, md: 10 }}
           borderTop="1px"
           borderColor="whiteAlpha.100"
           bg="luxuryBlack"
+          position={{ base: "relative", md: "sticky" }}
+          bottom={0}
         >
           <Flex
             direction={{ base: "column", md: "row" }}
             align="center"
-            gap={6}
+            gap={{ base: 3, md: 6 }}
             w="full"
           >
             <Text
               flex={1}
               color="whiteAlpha.600"
-              fontSize="sm"
+              fontSize={{ base: "xs", md: "sm" }}
               lineHeight="relaxed"
+              display={{ base: "none", md: "block" }}
             >
               By clicking confirm, you agree to our booking terms and
               conditions. A confirmation email will be sent to your registered
@@ -787,9 +1074,9 @@ export const BookingModal = ({
               onClick={handleSubmit}
               bg="primaryRed"
               color="white"
-              h={16}
+              h={{ base: 14, md: 16 }}
               minW={{ base: "full", md: "240px" }}
-              fontSize="lg"
+              fontSize={{ base: "md", md: "lg" }}
               fontWeight="bold"
               rightIcon={<Icon as={MdArrowForward} />}
               _hover={{ bg: "red.600" }}

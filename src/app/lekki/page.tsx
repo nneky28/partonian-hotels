@@ -14,9 +14,9 @@ import { getResponsiveSrcSet } from '@/utils/imageUtils';
 
 const navLinks = [
   { label: 'Home', href: '/' },
-  { label: 'Lekki', href: '/branches/lekki' },
-  { label: 'Ikate', href: '/branches/ikate' },
-  { label: 'Awka', href: '/branches/awka' },
+  { label: 'Lekki', href: '/lekki' },
+  { label: 'Ikate', href: '/ikate' },
+  { label: 'Awka', href: '/awka' },
 ];
 
 
@@ -91,6 +91,11 @@ const rooms = [
   },
 ];
 
+const roomPrices = rooms.reduce((acc, room) => {
+  acc[room.name] = Number(String(room.price).replace(/[^\d]/g, ''));
+  return acc;
+}, {} as Record<string, number>);
+
 const heroSlides = [
   {
     image: 'https://res.cloudinary.com/djmwqkcw5/image/upload/v1769629746/DSC00334_bt55ra.jpg',
@@ -146,7 +151,7 @@ export default function LekkiBranchPage() {
       <Box as="main" flex={1}>
         <BranchHeroSlider
           slides={heroSlides}
-          galleryUrl="/branches/lekki/gallery"
+          galleryUrl="/lekki/gallery"
           onBookNow={() => setIsBookingModalOpen(true)}
           autoPlayInterval={6000}
         />
@@ -193,7 +198,8 @@ export default function LekkiBranchPage() {
       <BookingModal
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
-        branchName=" Parktonian Hotel Lekki"
+        branchName="Parktonian Hotel Lekki"
+        roomPrices={roomPrices}
       />
     </Box>
   );
