@@ -13,6 +13,6 @@ app.prepare().then(() => {
   }).listen(port, (err) => {
     if (err) throw err;
     // eslint-disable-next-line no-console
-    console.log(`> Ready on port ${port}`);
+    console.log(`> Ready on port`);
   });
 });

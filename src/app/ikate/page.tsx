@@ -134,8 +134,7 @@ const heroSlides = [
 export default function IkateBranchPage() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
-  const handleBookRoom = (roomId: string) => {
-    console.log("Booking room:", roomId);
+  const handleBookRoom = () => {
     setIsBookingModalOpen(true);
   };
 
@@ -155,7 +154,7 @@ export default function IkateBranchPage() {
 
         <BranchInfoSection
           subtitle="Serene Elegance"
-          title="The Exclusive Parktonian <br/> Hotel Ikate"
+          title="Parktonian Hotel Ikate"
           description={[
             "A tranquil retreat in the heart of Lagos' most exclusive neighborhood, designed for those who seek privacy and bespoke hospitality.",
             "Parktonian Hotel Ikate is located along the Lekki-Epe Expressway by the prominent Chisco Busstop. It is a favourite destination for individuals who desire a serene environment to relax and refresh.",

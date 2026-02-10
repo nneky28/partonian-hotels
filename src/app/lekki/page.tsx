@@ -135,13 +135,12 @@ const heroSlides = [
 export default function LekkiBranchPage() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
-  const handleBookRoom = (roomId: string) => {
-    console.log('Booking room:', roomId);
+  const handleBookRoom = () => {
     setIsBookingModalOpen(true);
   };
 
-  const handleToggleFavorite = (roomId: string) => {
-    console.log('Toggle favorite:', roomId);
+  const handleToggleFavorite = () => {
+    console.log('Toggle favorite:');
   };
 
   return (
@@ -158,7 +157,7 @@ export default function LekkiBranchPage() {
 
         <BranchInfoSection
           subtitle="Luxury Redefined"
-          title="The Iconic Parktonian <br/>Hotel Lekki Phase 1"
+          title="Parktonian Hotel Lekki"
           description={[
             "Experience unparalleled elegance in the heart of Lagos' most prestigious district. Parktonian Hotel Lekki stands as a beacon of modern luxury and African hospitality.",
             "Nestled in Lekki Phase 1, Parktonian Hotel Lekki offers breathtaking views and world-class amenities for discerning guests. Our establishment is designed for those who desire comfort, luxury and connection.",

@@ -76,7 +76,6 @@ export async function POST(request: Request) {
 
     
     if (!environment) {
-      console.log('✗ UNAUTHORIZED: Invalid token');
       return NextResponse.json(
         { success: false, message: 'Unauthorized access' },
         { status: 401 }
@@ -100,7 +99,6 @@ export async function POST(request: Request) {
     
     for (const field of requiredFields) {
       if (!data[field]) {
-        console.log(`✗ VALIDATION FAILED: Missing ${field}`);
         return NextResponse.json(
           { success: false, message: `Missing required field: ${field}` },
           { status: 400 }
@@ -168,18 +166,12 @@ body{font-family:Arial,sans-serif;line-height:1.6;color:#333;margin:0;padding:20
 </body>
 </html>`,
       });
-      console.log('✓ Admin email sent to:', adminEmail);
-      console.log('Admin email result:', JSON.stringify(adminResult, null, 2));
     } catch (error) {
       const errMsg = error instanceof Error ? error.message : 'Unknown error';
-      console.log('✗ Admin email error:', errMsg);
-      console.log('Full error object:', error);
       emailErrors.push('Admin email failed: ' + errMsg);
     }
 
     // 6. Send confirmation email to guest
-    console.log('Starting guest email send...');
-    console.log('Sending to guest email:', data.email);
     
     try {
       const guestResult = await transporter.sendMail({
@@ -236,18 +228,14 @@ body{font-family:Arial,sans-serif;line-height:1.6;color:#333;margin:0;padding:20
 </body>
 </html>`,
       });
-      console.log('✓ Guest email sent to:', data.email);
-      console.log('Guest email result:', JSON.stringify(guestResult, null, 2));
-    } catch (error) {
+       } catch (error) {
       const errMsg = error instanceof Error ? error.message : 'Unknown error';
-      console.log('✗ Guest email error:', errMsg);
-      console.log('Full error object:', error);
-      emailErrors.push('Guest email failed: ' + errMsg);
+       emailErrors.push('Guest email failed: ' + errMsg);
     }
 
     // 7. Check if both emails failed
     if (emailErrors.length === 2) {
-      console.log('✗ All emails failed');
+
       return NextResponse.json(
         { success: false, message: 'Booking saved but email notifications failed. We will contact you shortly.' },
         { status: 500 }
@@ -255,13 +243,11 @@ body{font-family:Arial,sans-serif;line-height:1.6;color:#333;margin:0;padding:20
     }
     
     if (emailErrors.length === 1) {
-      console.log('⚠ One email failed:', emailErrors[0]);
+      console.log('⚠ One email failed:');
     }
     
     const endTime = new Date();
     const duration = endTime.getTime() - startTime.getTime();
-    console.log(`✓ Request completed in ${duration}ms`);
-    console.log('=== END REQUEST ===');
 
     return NextResponse.json({
       success: true,
@@ -269,10 +255,6 @@ body{font-family:Arial,sans-serif;line-height:1.6;color:#333;margin:0;padding:20
     });
 
   } catch (error) {
-    console.log('✗✗✗ CRITICAL ERROR ✗✗✗');
-    console.log('Error message:', error instanceof Error ? error.message : 'Unknown error');
-    console.log('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
-    
     return NextResponse.json(
       { 
         success: false, 

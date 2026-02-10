@@ -56,7 +56,7 @@ export const BranchInfoSection = ({
 
             <VStack spacing={6} align={['center',"flex-start"]} mt={8} >
               {description.map((para, idx) => (
-                <Text key={idx} color="whiteAlpha.700" fontSize="lg" lineHeight="relaxed" maxW="2xl">
+                <Text key={idx} color="whiteAlpha.700" fontSize={["16px",'lg']} lineHeight="relaxed" maxW="2xl">
                   {para}
                 </Text>
               ))}

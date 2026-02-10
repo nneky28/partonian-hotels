@@ -184,7 +184,7 @@ export default function AwkaBranchPage() {
 
         <BranchInfoSection
           subtitle="Eastern Excellence"
-          title="The Grand Parktonian  <br/> Hotel Awka"
+          title="Parktonian Hotel Awka"
           description={[
             "Experience premium comfort in the eastern heartland, where traditional hospitality meets international luxury standards.",
             "Located in the heart of Awka, Anambra State's capital, Parktonian Hotel Awka stands as a beacon of excellence and hospitality in the Southeast. Discover the perfect blend of modern amenities and authentic Eastern Nigerian hospitality.",
@@ -213,7 +213,7 @@ export default function AwkaBranchPage() {
         <RoomsSection
           rooms={rooms}
           onBookRoom={handleBookRoom}
-          onToggleFavorite={(id) => console.log("Favorite:", id)}
+          onToggleFavorite={(id) => console.log("Favorite:")}
         />
       </Box>
 

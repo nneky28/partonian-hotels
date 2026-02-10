@@ -250,12 +250,8 @@ export const BookingModal = ({
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    console.log('=== BOOKING SUBMISSION STARTED ===');
-    console.log('Timestamp:', new Date().toISOString());
 
     if (!validateForm()) {
-      console.log('❌ Form validation failed');
       toast({
         title: "Validation Error",
         description: "Please fill in all required fields correctly",
@@ -265,15 +261,9 @@ export const BookingModal = ({
       });
       return;
     }
-    
-    console.log('✓ Form validation passed');
-    //parktonianhotels@yahoo.com
-
     setIsSubmitting(true);
 
     try {
-      console.log('Starting booking submission...');
-
       const formatDateForSubmission = (date: Date) => {
         return date.toISOString().split('T')[0];
       };
@@ -290,13 +280,9 @@ export const BookingModal = ({
         roomRate: formatCurrency(roomRatePerNight),
         totalPrice: formatCurrency(totalPrice),
       };
-      
-      console.log('Booking data prepared:', bookingData);
 
       // Use development token by default (matches API_SECRETS in route.ts)
-      const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN || 'dev_7993d852fcc630829d805ad06ecc8712a73fe0f52869f51c78fd7b18602768cd';
-      
-      console.log('Sending booking to API...');
+      const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN || '';
       const response = await fetch('/api/bookings', {
         method: 'POST',
         headers: {
@@ -305,17 +291,12 @@ export const BookingModal = ({
         },
         body: JSON.stringify(bookingData),
       });
-
-      console.log('API response status:', response.status);
       
       const result = await response.json();
-      console.log('API response:', result);
 
       if (!response.ok || !result.success) {
         throw new Error(result.message || 'Failed to submit booking');
       }
-
-      console.log('✓ Booking submission complete');
       
       toast({
         title: "Booking Submitted!",
@@ -341,7 +322,6 @@ export const BookingModal = ({
         isClosable: true,
       });
     } finally {
-      console.log('Setting isSubmitting to false');
       setIsSubmitting(false);
     }
   };
