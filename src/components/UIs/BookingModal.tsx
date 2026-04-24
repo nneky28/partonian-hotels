@@ -43,7 +43,8 @@ interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   branchName?: string;
-  roomPrices?: Record<string, number>;
+  selectedRoom?: any;
+  availableRooms?: any[];
   onSubmit?: (data: any) => void;
 }
 
@@ -51,13 +52,17 @@ export const BookingModal = ({
   isOpen,
   onClose,
   branchName = "Parktonian Hotel",
-  roomPrices,
+  selectedRoom,
+  availableRooms = [],
   onSubmit,
 }: BookingModalProps) => {
   const toast = useToast();
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
-  const [roomType, setRoomType] = useState("");
+  const [selectedRoomId, setSelectedRoomId] = useState<string>("");
+  // FIX 1: Declare roomType and selectedRoomName state (were missing, causing all the errors)
+  const [roomType, setRoomType] = useState<string>("");
+  const [selectedRoomName, setSelectedRoomName] = useState<string>("");
   const [guests, setGuests] = useState("2");
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -68,15 +73,55 @@ export const BookingModal = ({
   const [isCheckInCalendarOpen, setIsCheckInCalendarOpen] = useState(false);
   const [isCheckOutCalendarOpen, setIsCheckOutCalendarOpen] = useState(false);
 
-  // Default room prices if not provided
-  const defaultRoomPrices: Record<string, number> = {
-    deluxe: 120000,
-    alcove: 140000,
-    royal: 150000,
-    executive: 250000,
+  // Extract price from room price string (e.g., "₦120,000" or "120000" -> 120000)
+  const extractPrice = (priceStr?: string): number | null => {
+    if (!priceStr) return null;
+    const cleaned = priceStr.replace(/[₦,$\s]/g, "").trim();
+    const price = parseInt(cleaned);
+    return isNaN(price) ? null : price;
   };
 
-  const prices = roomPrices || defaultRoomPrices;
+  // FIX 2: Build a dynamic prices map from availableRooms instead of a hardcoded object
+  const prices = useMemo(() => {
+    const map: Record<string, number> = {};
+    availableRooms.forEach((room: any) => {
+      const price = extractPrice(room.price);
+      if (room.id && price !== null) {
+        map[room.id] = price;
+      }
+    });
+    return map;
+  }, [availableRooms]);
+
+  // Get currently selected room object
+  const currentRoom = useMemo(() => {
+    if (availableRooms && selectedRoomId) {
+      return availableRooms.find((room: any) => room.id === selectedRoomId);
+    }
+    return null;
+  }, [selectedRoomId, availableRooms]);
+
+  // Pre-fill with selected room when modal opens
+  useEffect(() => {
+    if (isOpen && selectedRoom && availableRooms.length > 0) {
+      const matchingRoom = availableRooms.find(
+        (room: any) => room.id === selectedRoom.id
+      );
+      if (matchingRoom) {
+        setSelectedRoomId(matchingRoom.id);
+        // FIX 3: Sync roomType and selectedRoomName when pre-filling
+        setRoomType(matchingRoom.id);
+        setSelectedRoomName(matchingRoom.name || "");
+      }
+    }
+  }, [selectedRoom, isOpen, availableRooms]);
+
+  // Get room rate per night from current selection
+  const roomRatePerNight = useMemo(() => {
+    if (!currentRoom) return 0;
+    const price = extractPrice(currentRoom.price);
+    return price || 0;
+  }, [currentRoom]);
 
   // Calculate number of nights
   const numberOfNights = useMemo(() => {
@@ -86,17 +131,11 @@ export const BookingModal = ({
     return diffDays;
   }, [checkInDate, checkOutDate]);
 
-  // Calculate total price - only if room type is selected
+  // Calculate total price - only if room is selected
   const totalPrice = useMemo(() => {
-    if (!roomType || numberOfNights === 0) return 0;
-    return prices[roomType] * numberOfNights;
-  }, [roomType, numberOfNights, prices]);
-
-  // Get room rate per night
-  const roomRatePerNight = useMemo(() => {
-    if (!roomType) return 0;
-    return prices[roomType];
-  }, [roomType, prices]);
+    if (!currentRoom || numberOfNights === 0) return 0;
+    return roomRatePerNight * numberOfNights;
+  }, [currentRoom, numberOfNights, roomRatePerNight]);
 
   // Format date for display
   const formatDate = (date: Date | null) => {
@@ -126,12 +165,9 @@ export const BookingModal = ({
     const startPadding = firstDay.getDay();
     const days = [];
 
-    // Add padding for days before month starts
     for (let i = 0; i < startPadding; i++) {
       days.push(null);
     }
-
-    // Add all days in month
     for (let day = 1; day <= lastDay.getDate(); day++) {
       days.push(new Date(year, month, day));
     }
@@ -139,18 +175,24 @@ export const BookingModal = ({
     return days;
   }, [currentMonth]);
 
-  // Navigate months - Allow past and future
   const goToPreviousMonth = () => {
-    const newMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
+    const newMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() - 1,
+      1
+    );
     setCurrentMonth(newMonth);
   };
 
   const goToNextMonth = () => {
-    const newMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
+    const newMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() + 1,
+      1
+    );
     setCurrentMonth(newMonth);
   };
 
-  // Prevent going back to months before current month
   const canGoPrevious = useMemo(() => {
     const today = new Date();
     const firstDayOfCurrentDisplayMonth = new Date(
@@ -158,28 +200,27 @@ export const BookingModal = ({
       currentMonth.getMonth(),
       1
     );
-    const firstDayOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const firstDayOfCurrentMonth = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      1
+    );
     return firstDayOfCurrentDisplayMonth >= firstDayOfCurrentMonth;
   }, [currentMonth]);
 
-  // Handle date selection
   const handleDateClick = (date: Date, isForCheckIn: boolean) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
-    // Don't allow selecting past dates
     if (date < today) return;
 
     if (isForCheckIn) {
       setCheckInDate(date);
-      // If checkout is before new checkin, reset it
       if (checkOutDate && date >= checkOutDate) {
         setCheckOutDate(null);
       }
       setErrors({ ...errors, dates: "", checkIn: "", checkOut: "" });
       setIsCheckInCalendarOpen(false);
     } else {
-      // For checkout, only allow dates after checkin
       if (checkInDate && date > checkInDate) {
         setCheckOutDate(date);
         setErrors({ ...errors, dates: "", checkIn: "", checkOut: "" });
@@ -188,13 +229,11 @@ export const BookingModal = ({
     }
   };
 
-  // Check if date is in selected range
   const isDateInRange = (date: Date) => {
     if (!checkInDate || !checkOutDate) return false;
     return date > checkInDate && date < checkOutDate;
   };
 
-  // Check if date is selected (check-in or check-out)
   const isDateSelected = (date: Date) => {
     if (!date) return false;
     if (checkInDate && date.toDateString() === checkInDate.toDateString())
@@ -204,50 +243,32 @@ export const BookingModal = ({
     return false;
   };
 
-  // Validate form
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
 
-    // Date validation
-    if (!checkInDate) {
-      newErrors.checkIn = "Please select check-in date";
-    }
-
-    if (!checkOutDate) {
-      newErrors.checkOut = "Please select check-out date";
-    }
-
-    if (checkInDate && checkOutDate && checkOutDate <= checkInDate) {
+    if (!checkInDate) newErrors.checkIn = "Please select check-in date";
+    if (!checkOutDate) newErrors.checkOut = "Please select check-out date";
+    if (checkInDate && checkOutDate && checkOutDate <= checkInDate)
       newErrors.dates = "Check-out must be after check-in";
-    }
 
-    // Name validation
-    if (!fullName || fullName.trim().length < 2) {
+    if (!fullName || fullName.trim().length < 2)
       newErrors.fullName = "Please enter a valid full name";
-    }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email || !emailRegex.test(email)) {
+    if (!email || !emailRegex.test(email))
       newErrors.email = "Please enter a valid email address";
-    }
 
-    // Phone validation (must contain at least 10 digits)
-    const phoneDigits = phone.replace(/\D/g, '');
-    if (!phone || phoneDigits.length < 10) {
-      newErrors.phone = "Please enter a valid phone number (at least 10 digits)";
-    }
+    const phoneDigits = phone.replace(/\D/g, "");
+    if (!phone || phoneDigits.length < 10)
+      newErrors.phone =
+        "Please enter a valid phone number (at least 10 digits)";
 
-    // Room type validation
-    if (!roomType) {
-      newErrors.roomType = "Please select a room type";
-    }
+    if (!roomType) newErrors.roomType = "Please select a room type";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -264,40 +285,38 @@ export const BookingModal = ({
     setIsSubmitting(true);
 
     try {
-      const formatDateForSubmission = (date: Date) => {
-        return date.toISOString().split('T')[0];
-      };
+      const formatDateForSubmission = (date: Date) =>
+        date.toISOString().split("T")[0];
 
       const bookingData = {
         fullName,
         email,
         phone,
         branchName,
-        checkInDate: checkInDate ? formatDateForSubmission(checkInDate) : '',
-        checkOutDate: checkOutDate ? formatDateForSubmission(checkOutDate) : '',
+        checkInDate: checkInDate ? formatDateForSubmission(checkInDate) : "",
+        checkOutDate: checkOutDate ? formatDateForSubmission(checkOutDate) : "",
         numberOfNights,
-        roomType,
+        roomType: selectedRoomName || roomType,
         roomRate: formatCurrency(roomRatePerNight),
         totalPrice: formatCurrency(totalPrice),
       };
 
-      // Use development token by default (matches API_SECRETS in route.ts)
-      const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN || '';
-      const response = await fetch('/api/bookings', {
-        method: 'POST',
+      const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN || "";
+      const response = await fetch("/api/bookings", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${API_TOKEN}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${API_TOKEN}`,
         },
         body: JSON.stringify(bookingData),
       });
-      
+
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        throw new Error(result.message || 'Failed to submit booking');
+        throw new Error(result.message || "Failed to submit booking");
       }
-      
+
       toast({
         title: "Booking Submitted!",
         description: "We'll contact you shortly to confirm your reservation.",
@@ -306,17 +325,12 @@ export const BookingModal = ({
         isClosable: true,
       });
       handleClose();
-
     } catch (error) {
-      console.error('❌ Booking submission error:', error);
-      console.error('Error details:', {
-        message: error instanceof Error ? error.message : 'Unknown error',
-        stack: error instanceof Error ? error.stack : undefined
-      });
-      
+      console.error("Booking submission error:", error);
       toast({
         title: "Submission Failed",
-        description: "Unable to submit booking. Please try again or contact us directly.",
+        description:
+          "Unable to submit booking. Please try again or contact us directly.",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -326,11 +340,13 @@ export const BookingModal = ({
     }
   };
 
-  // Reset form on close
+  // FIX 4: handleClose now properly resets all state including roomType and selectedRoomName
   const handleClose = () => {
     setCheckInDate(null);
     setCheckOutDate(null);
     setRoomType("");
+    setSelectedRoomId("");
+    setSelectedRoomName("");
     setGuests("2");
     setFullName("");
     setEmail("");
@@ -342,10 +358,8 @@ export const BookingModal = ({
     onClose();
   };
 
-  // Calendar component for reuse
   const renderCalendar = (isForCheckIn: boolean) => (
     <VStack spacing={4} align="stretch">
-      {/* Month Navigation */}
       <Flex justify="space-between" align="center">
         <IconButton
           aria-label="Previous month"
@@ -372,7 +386,6 @@ export const BookingModal = ({
         />
       </Flex>
 
-      {/* Calendar Grid */}
       <Grid templateColumns="repeat(7, 1fr)" gap={1}>
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
           <Text
@@ -391,25 +404,22 @@ export const BookingModal = ({
           </Text>
         ))}
 
-        {/* Calendar days */}
         {calendarDays.map((date, index) => {
-          if (!date) {
-            return <Box key={`empty-${index}`} h={10} />;
-          }
+          if (!date) return <Box key={`empty-${index}`} h={10} />;
 
           const isSelected = isDateSelected(date);
           const isInRange = isDateInRange(date);
           const today = new Date();
           today.setHours(0, 0, 0, 0);
           const isPast = date < today;
-          const isCheckIn = checkInDate && date.toDateString() === checkInDate.toDateString();
-          const isCheckOut = checkOutDate && date.toDateString() === checkOutDate.toDateString();
-          
-          // For checkout calendar, disable dates before or equal to checkin
-          const isDisabledForCheckout = !isForCheckIn && !!checkInDate && date <= checkInDate;
-
+          const isCheckIn =
+            checkInDate && date.toDateString() === checkInDate.toDateString();
+          const isCheckOut =
+            checkOutDate && date.toDateString() === checkOutDate.toDateString();
+          const isDisabledForCheckout =
+            !isForCheckIn && !!checkInDate && date <= checkInDate;
           const isButtonDisabled = isPast || isDisabledForCheckout;
-          
+
           return (
             <Button
               key={index}
@@ -420,23 +430,19 @@ export const BookingModal = ({
                 isSelected
                   ? "primaryRed"
                   : isInRange
-                    ? "rgba(234, 42, 51, 0.3)"
-                    : "transparent"
+                  ? "rgba(234, 42, 51, 0.3)"
+                  : "transparent"
               }
               color={isButtonDisabled ? "whiteAlpha.300" : "white"}
               borderRadius={
-                isCheckIn
-                  ? "lg 0 0 lg"
-                  : isCheckOut
-                    ? "0 lg lg 0"
-                    : "lg"
+                isCheckIn ? "lg 0 0 lg" : isCheckOut ? "0 lg lg 0" : "lg"
               }
               _hover={{
                 bg: isButtonDisabled
                   ? undefined
                   : isSelected
-                    ? "red.600"
-                    : "whiteAlpha.100",
+                  ? "red.600"
+                  : "whiteAlpha.100",
               }}
               _disabled={{
                 opacity: 0.3,
@@ -454,7 +460,6 @@ export const BookingModal = ({
         })}
       </Grid>
 
-      {/* Legend */}
       <HStack spacing={4} pt={2} fontSize="xs" justify="center">
         <HStack spacing={1}>
           <Box w={3} h={3} bg="primaryRed" borderRadius="sm" />
@@ -488,7 +493,6 @@ export const BookingModal = ({
           size="lg"
         />
 
-        {/* Header */}
         <ModalHeader
           borderBottom="1px"
           borderColor="whiteAlpha.100"
@@ -499,7 +503,7 @@ export const BookingModal = ({
             <Box>
               <Image
                 src="https://res.cloudinary.com/djmwqkcw5/image/upload/v1769628785/Parktonian_Black_ttdw7p.png"
-                srcSet='https://res.cloudinary.com/djmwqkcw5/image/upload/w_200,q_auto,f_auto/v1769628785/Parktonian_Black_ttdw7p.png 200w, https://res.cloudinary.com/djmwqkcw5/image/upload/w_400,q_auto,f_auto/v1769628785/Parktonian_Black_ttdw7p.png 400w'
+                srcSet="https://res.cloudinary.com/djmwqkcw5/image/upload/w_200,q_auto,f_auto/v1769628785/Parktonian_Black_ttdw7p.png 200w, https://res.cloudinary.com/djmwqkcw5/image/upload/w_400,q_auto,f_auto/v1769628785/Parktonian_Black_ttdw7p.png 400w"
                 sizes="(max-width: 768px) 60px, 100px"
                 alt="Parktonian Hotels Logo"
                 objectFit="contain"
@@ -518,10 +522,14 @@ export const BookingModal = ({
           </HStack>
         </ModalHeader>
 
-        <ModalBody px={{ base: 4, md: 10 }} py={8} overflowY="auto" pb={{ base: 6, md: 8 }}>
+        <ModalBody
+          px={{ base: 4, md: 10 }}
+          py={8}
+          overflowY="auto"
+          pb={{ base: 6, md: 8 }}
+        >
           <form onSubmit={handleSubmit}>
             <VStack align="stretch" spacing={8}>
-              {/* Section Header */}
               <Box>
                 <Text fontSize="28px" fontWeight="bold" mb={1}>
                   Booking for: {branchName}
@@ -549,13 +557,13 @@ export const BookingModal = ({
                 {/* Form Fields Side */}
                 <GridItem>
                   <VStack spacing={6}>
-                    {/* Check-in / Check-out Display with Popover Calendars on Mobile, Static on Desktop */}
+                    {/* Check-in / Check-out */}
                     <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full">
                       <FormControl isInvalid={!!errors.checkIn}>
                         <FormLabel fontSize="sm" fontWeight="medium">
                           Check-in Date
                         </FormLabel>
-                        {/* Mobile: Popover, Desktop: Static display */}
+                        {/* Mobile: Popover */}
                         <Box display={{ base: "block", lg: "none" }}>
                           <Popover
                             isOpen={isCheckInCalendarOpen}
@@ -582,7 +590,9 @@ export const BookingModal = ({
                                 transition="border-color 0.2s"
                               >
                                 <Text
-                                  color={checkInDate ? "white" : "whiteAlpha.400"}
+                                  color={
+                                    checkInDate ? "white" : "whiteAlpha.400"
+                                  }
                                 >
                                   {formatDate(checkInDate)}
                                 </Text>
@@ -656,7 +666,9 @@ export const BookingModal = ({
                                 bg="surfaceBlack"
                                 border="1px"
                                 borderColor={
-                                  errors.checkOut ? "red.500" : "whiteAlpha.200"
+                                  errors.checkOut
+                                    ? "red.500"
+                                    : "whiteAlpha.200"
                                 }
                                 h={14}
                                 borderRadius="md"
@@ -669,7 +681,9 @@ export const BookingModal = ({
                                 transition="border-color 0.2s"
                               >
                                 <Text
-                                  color={checkOutDate ? "white" : "whiteAlpha.400"}
+                                  color={
+                                    checkOutDate ? "white" : "whiteAlpha.400"
+                                  }
                                 >
                                   {formatDate(checkOutDate)}
                                 </Text>
@@ -726,32 +740,74 @@ export const BookingModal = ({
                       </FormControl>
                     </Grid>
 
-                    {/* Room Type */}
+                    {/* FIX 5: Room Type dropdown now maps over availableRooms dynamically */}
                     <FormControl isRequired isInvalid={!!errors.roomType}>
                       <FormLabel fontSize="sm" fontWeight="medium">
                         Room Type
                       </FormLabel>
-                      <Select
-                        placeholder="Select room type"
-                        value={roomType}
-                        onChange={(e) => {
-                          setRoomType(e.target.value);
-                          if (errors.roomType) {
-                            setErrors({ ...errors, roomType: "" });
-                          }
-                        }}
-                        bg="surfaceBlack"
-                        border="1px"
-                        borderColor="whiteAlpha.200"
-                        h={14}
-                        _focus={{ ring: 2, ringColor: "primaryRed" }}
-                      >
-                        {Object.keys(prices).map((type) => (
-                          <option key={type} value={type}>
-                            {type.charAt(0).toUpperCase() + type.slice(1)} Room - {formatCurrency(prices[type])}/night
-                          </option>
-                        ))}
-                      </Select>
+                      {selectedRoomName ? (
+                        // Pre-selected room (came from a "Book Now" on a room card)
+                        <Box
+                          bg="surfaceBlack"
+                          border="1px"
+                          borderColor="primaryRed"
+                          h={14}
+                          borderRadius="md"
+                          display="flex"
+                          alignItems="center"
+                          px={4}
+                          position="relative"
+                        >
+                          <Text color="white" fontWeight="medium">
+                            {selectedRoomName} -{" "}
+                            {formatCurrency(roomRatePerNight)}/night
+                          </Text>
+                          <Text
+                            fontSize="xs"
+                            color="primaryRed"
+                            position="absolute"
+                            right={4}
+                          >
+                            ✓ Selected
+                          </Text>
+                        </Box>
+                      ) : (
+                        // No pre-selection — show all rooms from this branch
+                        <Select
+                          placeholder="Select room type"
+                          value={roomType}
+                          onChange={(e) => {
+                            const id = e.target.value;
+                            setRoomType(id);
+                            setSelectedRoomId(id);
+                            // Sync selectedRoomName for display in price summary
+                            const room = availableRooms.find(
+                              (r: any) => r.id === id
+                            );
+                            setSelectedRoomName(room?.name || "");
+                            if (errors.roomType) {
+                              setErrors({ ...errors, roomType: "" });
+                            }
+                          }}
+                          bg="surfaceBlack"
+                          border="1px"
+                          borderColor="whiteAlpha.200"
+                          h={14}
+                          _focus={{ ring: 2, ringColor: "primaryRed" }}
+                        >
+                          {availableRooms.map((room: any) => {
+                            const price = extractPrice(room.price);
+                            return (
+                              <option key={room.id} value={room.id}>
+                                {room.name}
+                                {price !== null
+                                  ? ` — ${formatCurrency(price)}/night`
+                                  : ""}
+                              </option>
+                            );
+                          })}
+                        </Select>
+                      )}
                       <FormErrorMessage>{errors.roomType}</FormErrorMessage>
                     </FormControl>
 
@@ -764,9 +820,8 @@ export const BookingModal = ({
                         value={fullName}
                         onChange={(e) => {
                           setFullName(e.target.value);
-                          if (errors.fullName) {
+                          if (errors.fullName)
                             setErrors({ ...errors, fullName: "" });
-                          }
                         }}
                         placeholder="Enter your full name"
                         bg="surfaceBlack"
@@ -787,9 +842,8 @@ export const BookingModal = ({
                         value={email}
                         onChange={(e) => {
                           setEmail(e.target.value);
-                          if (errors.email) {
+                          if (errors.email)
                             setErrors({ ...errors, email: "" });
-                          }
                         }}
                         placeholder="your.email@example.com"
                         bg="surfaceBlack"
@@ -810,9 +864,8 @@ export const BookingModal = ({
                         value={phone}
                         onChange={(e) => {
                           setPhone(e.target.value);
-                          if (errors.phone) {
+                          if (errors.phone)
                             setErrors({ ...errors, phone: "" });
-                          }
                         }}
                         placeholder="Enter phone number"
                         maxLength={11}
@@ -840,7 +893,9 @@ export const BookingModal = ({
                             Room Rate (per night)
                           </Text>
                           <Text fontWeight="bold">
-                            {roomType ? formatCurrency(roomRatePerNight) : "Select room type"}
+                            {roomType
+                              ? formatCurrency(roomRatePerNight)
+                              : "Select room type"}
                           </Text>
                         </Flex>
                         <Flex justify="space-between">
@@ -851,16 +906,33 @@ export const BookingModal = ({
                             {numberOfNights > 0 ? numberOfNights : "-"}
                           </Text>
                         </Flex>
-                        <Box borderTop="1px" borderColor="whiteAlpha.200" pt={3}>
-                          <Flex justify="space-between" align="center" gap={8}>
+                        <Box
+                          borderTop="1px"
+                          borderColor="whiteAlpha.200"
+                          pt={3}
+                        >
+                          <Flex
+                            justify="space-between"
+                            align="center"
+                            gap={8}
+                          >
                             <Text fontWeight="bold">Estimated Total</Text>
-                            <Text fontSize="2xl" fontWeight="black" color="primaryRed">
+                            <Text
+                              fontSize="2xl"
+                              fontWeight="black"
+                              color="primaryRed"
+                            >
                               {totalPrice > 0 ? formatCurrency(totalPrice) : "-"}
                             </Text>
                           </Flex>
                         </Box>
                         {!roomType && (
-                          <Text color="whiteAlpha.500" fontSize="xs" fontStyle="italic" textAlign="center">
+                          <Text
+                            color="whiteAlpha.500"
+                            fontSize="xs"
+                            fontStyle="italic"
+                            textAlign="center"
+                          >
                             Please select a room type to see pricing
                           </Text>
                         )}
@@ -881,7 +953,6 @@ export const BookingModal = ({
                       Availability Calendar
                     </Text>
 
-                    {/* Month Navigation */}
                     <Flex justify="space-between" align="center" mb={2}>
                       <IconButton
                         aria-label="Previous month"
@@ -908,40 +979,47 @@ export const BookingModal = ({
                       />
                     </Flex>
 
-                    {/* Calendar Grid */}
                     <Grid templateColumns="repeat(7, 1fr)" gap={1}>
-                      {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                        (day) => (
-                          <Text
-                            key={day}
-                            color="whiteAlpha.400"
-                            fontSize="11px"
-                            fontWeight="bold"
-                            textTransform="uppercase"
-                            textAlign="center"
-                            h={10}
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                          >
-                            {day.slice(0, 3)}
-                          </Text>
-                        ),
-                      )}
+                      {[
+                        "Sun",
+                        "Mon",
+                        "Tue",
+                        "Wed",
+                        "Thu",
+                        "Fri",
+                        "Sat",
+                      ].map((day) => (
+                        <Text
+                          key={day}
+                          color="whiteAlpha.400"
+                          fontSize="11px"
+                          fontWeight="bold"
+                          textTransform="uppercase"
+                          textAlign="center"
+                          h={10}
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          {day.slice(0, 3)}
+                        </Text>
+                      ))}
 
-                      {/* Calendar days */}
                       {calendarDays.map((date, index) => {
-                        if (!date) {
+                        if (!date)
                           return <Box key={`empty-${index}`} h={12} />;
-                        }
 
                         const isSelected = isDateSelected(date);
                         const isInRange = isDateInRange(date);
                         const today = new Date();
                         today.setHours(0, 0, 0, 0);
                         const isPast = date < today;
-                        const isCheckIn = checkInDate && date.toDateString() === checkInDate.toDateString();
-                        const isCheckOut = checkOutDate && date.toDateString() === checkOutDate.toDateString();
+                        const isCheckIn =
+                          checkInDate &&
+                          date.toDateString() === checkInDate.toDateString();
+                        const isCheckOut =
+                          checkOutDate &&
+                          date.toDateString() === checkOutDate.toDateString();
 
                         return (
                           <Button
@@ -953,40 +1031,55 @@ export const BookingModal = ({
                               isSelected
                                 ? "primaryRed"
                                 : isInRange
-                                  ? "rgba(234, 42, 51, 0.3)"
-                                  : "transparent"
+                                ? "rgba(234, 42, 51, 0.3)"
+                                : "transparent"
                             }
                             color={isPast ? "whiteAlpha.300" : "white"}
                             borderRadius={
                               isCheckIn
                                 ? "lg 0 0 lg"
                                 : isCheckOut
-                                  ? "0 lg lg 0"
-                                  : "lg"
+                                ? "0 lg lg 0"
+                                : "lg"
                             }
                             _hover={{
                               bg: isPast
                                 ? "transparent"
                                 : isSelected
-                                  ? "red.600"
-                                  : "whiteAlpha.100",
+                                ? "red.600"
+                                : "whiteAlpha.100",
                             }}
                             onClick={() => {
                               if (isPast) return;
-                              const today = new Date();
-                              today.setHours(0, 0, 0, 0);
-                              
-                              if (!checkInDate || (checkInDate && checkOutDate)) {
+                              if (
+                                !checkInDate ||
+                                (checkInDate && checkOutDate)
+                              ) {
                                 setCheckInDate(date);
                                 setCheckOutDate(null);
-                                setErrors({ ...errors, dates: "", checkIn: "", checkOut: "" });
+                                setErrors({
+                                  ...errors,
+                                  dates: "",
+                                  checkIn: "",
+                                  checkOut: "",
+                                });
                               } else if (date > checkInDate) {
                                 setCheckOutDate(date);
-                                setErrors({ ...errors, dates: "", checkIn: "", checkOut: "" });
+                                setErrors({
+                                  ...errors,
+                                  dates: "",
+                                  checkIn: "",
+                                  checkOut: "",
+                                });
                               } else {
                                 setCheckInDate(date);
                                 setCheckOutDate(null);
-                                setErrors({ ...errors, dates: "", checkIn: "", checkOut: "" });
+                                setErrors({
+                                  ...errors,
+                                  dates: "",
+                                  checkIn: "",
+                                  checkOut: "",
+                                });
                               }
                             }}
                             isDisabled={isPast}
@@ -1001,11 +1094,12 @@ export const BookingModal = ({
                       })}
                     </Grid>
 
-                    {/* Legend */}
                     <HStack spacing={4} pt={4} fontSize="xs" justify="center">
                       <HStack spacing={1}>
                         <Box w={3} h={3} bg="primaryRed" borderRadius="sm" />
-                        <Text color="whiteAlpha.600" fontSize="xs">Selected</Text>
+                        <Text color="whiteAlpha.600" fontSize="xs">
+                          Selected
+                        </Text>
                       </HStack>
                       <HStack spacing={1}>
                         <Box
@@ -1014,7 +1108,9 @@ export const BookingModal = ({
                           bg="rgba(234, 42, 51, 0.3)"
                           borderRadius="sm"
                         />
-                        <Text color="whiteAlpha.600" fontSize="xs">In Range</Text>
+                        <Text color="whiteAlpha.600" fontSize="xs">
+                          In Range
+                        </Text>
                       </HStack>
                     </HStack>
                   </VStack>
@@ -1024,7 +1120,6 @@ export const BookingModal = ({
           </form>
         </ModalBody>
 
-        {/* Footer */}
         <ModalFooter
           p={{ base: 4, md: 10 }}
           borderTop="1px"
@@ -1062,7 +1157,15 @@ export const BookingModal = ({
               _hover={{ bg: "red.600" }}
               _active={{ transform: "scale(0.95)" }}
               shadow="lg"
-              isDisabled={!checkInDate || !checkOutDate || numberOfNights === 0 || !roomType || !fullName || !email || !phone}
+              isDisabled={
+                !checkInDate ||
+                !checkOutDate ||
+                numberOfNights === 0 ||
+                !roomType ||
+                !fullName ||
+                !email ||
+                !phone
+              }
               isLoading={isSubmitting}
               loadingText="Submitting..."
             >

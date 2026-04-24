@@ -10,9 +10,9 @@ const port = parseInt(process.env.PORT || '3000', 10);
 app.prepare().then(() => {
   createServer((req, res) => {
     handle(req, res);
-  }).listen(port, (err) => {
+  }).listen(port, '0.0.0.0', (err) => {
     if (err) throw err;
     // eslint-disable-next-line no-console
-    console.log(`> Ready on port`);
+    console.log(`> Ready on port ${port}`);
   });
 });

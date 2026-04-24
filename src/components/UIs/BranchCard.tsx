@@ -17,7 +17,7 @@ export const BranchCard = ({
   onExplore,
 }: BranchCardProps) => {
   return (
-    <Link href={`/branches/${id}`} passHref>
+    <Link href={`${id}`} passHref>
       <Box
         position="relative"
         bg="surfaceBlack"

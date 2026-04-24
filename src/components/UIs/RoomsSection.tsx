@@ -39,7 +39,7 @@ interface Room {
 
 interface RoomsSectionProps {
   rooms: Room[];
-  onBookRoom?: (roomId: string) => void;
+  onBookRoom?: (room: Room) => void;
   onToggleFavorite?: (roomId: string) => void;
 }
 
@@ -240,7 +240,7 @@ export const RoomsSection = ({ rooms, onBookRoom, onToggleFavorite }: RoomsSecti
                       borderRadius="lg"
                       rightIcon={<Icon as={MdArrowForward} />}
                       _hover={{ bg: 'red.600' }}
-                      onClick={() => onBookRoom?.(room.id)}
+                      onClick={() => onBookRoom?.(room)}
                     >
                       Book Now
                     </Button>

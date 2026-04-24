@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   Box,
   Flex,
@@ -15,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import { FooterSection } from "@/types";
+import { useBranchContent } from "@/hooks/useBranchContent";
 
 
 interface FooterProps {
@@ -22,8 +24,19 @@ interface FooterProps {
 }
 
 export const Footer = ({ sections }: FooterProps) => {
-  const date = new Date();
-  const year = date.getFullYear();
+  const { content: remoteContent } = useBranchContent("global");
+
+  const footerText = useMemo(() => {
+    return remoteContent.footer?.copyright || "© 2026 Parktonian Hotels Limited";
+  }, [remoteContent.footer]);
+
+  const designText = useMemo(() => {
+    return remoteContent.footer?.designText || "Web Design by BusyBridge Media";
+  }, [remoteContent.footer]);
+
+  const designUrl = useMemo(() => {
+    return remoteContent.footer?.designUrl || "https://www.busybridge.ng";
+  }, [remoteContent.footer]);
 
   return (
     <Box
@@ -138,8 +151,13 @@ export const Footer = ({ sections }: FooterProps) => {
             letterSpacing="widest"
             textAlign={{sm:'center', base:'center'}}
           >
-            © {year} Parktonian Hotels & Suites. All Rights Reserved.
+            {footerText}
           </Text>
+
+             <Link href={designUrl} isExternal _hover={{ color: "white" }}  color="textMuted"
+            fontSize="10px">
+              {designText}
+            </Link>
           <HStack
             spacing={8}
             fontSize="10px"
@@ -147,6 +165,7 @@ export const Footer = ({ sections }: FooterProps) => {
             letterSpacing="widest"
             color="textMuted"
           >
+         
             <Link href="#" _hover={{ color: "white" }}>
               Privacy
             </Link>

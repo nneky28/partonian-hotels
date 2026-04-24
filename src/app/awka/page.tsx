@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Box } from "@chakra-ui/react";
+import { useMemo, useState } from "react";
+import { Box, Text, Spinner, VStack } from "@chakra-ui/react";
 import { Header } from "@/components/UIs/Header";
 import { BranchHeroSlider } from "@/components/UIs/BranchHeroSlider";
 import { BranchInfoSection } from "@/components/UIs/BranchInfoSection";
@@ -25,6 +25,7 @@ import {
 } from "react-icons/md";
 import { footerSections } from "@/utils/footerSection";
 import { getResponsiveSrcSet } from "@/utils/imageUtils";
+import { useBranchContent } from "@/hooks/useBranchContent";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -33,95 +34,12 @@ const navLinks = [
   { label: "Awka", href: "/awka" },
 ];
 
-const rooms = [
-  {
-    id: "deluxe",
-    name: "Deluxe",
-    price: "₦70,000",
-    image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692060/PA_Deluxe_sqsnbp.jpg",
-    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692060/PA_Deluxe_sqsnbp.jpg"),
-    badge: { text: "Best Value", color: "primary" as const },
-    description: "Comfortable deluxe room with modern amenities.",
-    amenities: [
-      { icon: MdKingBed, label: "King Bed" },
-      { icon: MdDesk, label: "Work Desk" },
-      { icon: MdPool, label: "Pool Access" },
-    ],
-  },
-  {
-    id: "alcove",
-    name: "Alcove",
-    price: "₦70,000",
-    image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692040/PA_Alcove_lfxo9u.jpg",
-    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692040/PA_Alcove_lfxo9u.jpg"),
-    description: "Spacious alcove room with sitting area.",
-    amenities: [
-      { icon: MdKingBed, label: "King Bed" },
-      { icon: MdPool, label: "Pool Access" },
-      { icon: MdDesk, label: "Work Desk" },
-    ],
-  },
-  {
-    id: "royal-alcove",
-    name: "Royal Alcove",
-    price: "₦75,000",
-    image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692065/PA_Classic_Alcove_pemy6p.jpg",
-    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692065/PA_Classic_Alcove_pemy6p.jpg"),
-    badge: { text: "Popular", color: "primary" as const },
-    description: "Premium royal alcove suite.",
-    amenities: [
-      { icon: MdKingBed, label: "King Bed" },
-      { icon: MdVisibility, label: "City View" },
-      { icon: MdPool, label: "Pool Access" },
-    ],
-  },
-  {
-    id: "executive-suite",
-    name: "Executive Suite",
-    price: "₦150,000",
-    image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692059/PA_Executive_mgldps.jpg",
-    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692059/PA_Executive_mgldps.jpg"),
-    description: "Spacious executive suite with premium amenities.",
-    amenities: [
-      { icon: MdKingBed, label: "King Bed" },
-      { icon: MdWork, label: "Work Desk" },
-      { icon: MdBalcony, label: "Balcony" },
-    ],
-  },
-  {
-    id: "ambassadorial-suite",
-    name: "Ambassadorial Suite",
-    price: "₦160,000",
-    image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692041/IMG_20220628_054302_pdgakm.jpg",
-    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692041/IMG_20220628_054302_pdgakm.jpg"),
-    badge: { text: "Luxury", color: "gold" as const },
-    description: "Luxury ambassadorial suite with exclusive amenities.",
-    amenities: [
-      { icon: MdKingBed, label: "King Bed" },
-      { icon: MdBalcony, label: "Private Balcony" },
-      { icon: MdPool, label: "Pool Access" },
-    ],
-  },
-  {
-    id: "presidential-suite",
-    name: "Presidential Suite",
-    price: "₦210,000",
-    image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692009/Parktonian_Hotel_Awka_xckfw8.jpg",
-    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769692009/Parktonian_Hotel_Awka_xckfw8.jpg"),
-    badge: { text: "Ultimate Luxury", color: "gold" as const },
-    description: "The ultimate presidential suite with all premium amenities.",
-    amenities: [
-      { icon: MdKingBed, label: "King Bed" },
-      { icon: MdVisibility, label: "Panoramic View" },
-      { icon: MdBalcony, label: "Private Balcony" },
-    ],
-  },
+const defaultAttractions = [
+  { icon: MdChurch, name: "Ekwueme Square", distance: "5 MIN DRIVE" },
+  { icon: MdShoppingBag, name: "Awka City Stadium", distance: "8 MIN DRIVE" },
+  { icon: MdLocalActivity, name: "Nnamdi Azikiwe University", distance: "15 MIN DRIVE" },
+  { icon: MdDirectionsCar, name: "Awka Secretariat", distance: "10 MIN DRIVE" },
 ];
-
-const roomPrices = rooms.reduce((acc, room) => {
-  acc[room.name] = Number(String(room.price).replace(/[^\d]/g, ""));
-  return acc;
-}, {} as Record<string, number>);
 
 const heroSlides = [
     {
@@ -165,9 +83,26 @@ const heroSlides = [
 
 export default function AwkaBranchPage() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<any>(null);
+  const { content: remoteContent, isLoading } = useBranchContent("awka");
 
-  const handleBookRoom = (roomId: string) => {
-    console.log("Booking room:", roomId);
+  const attractions = useMemo(() => {
+    if (!remoteContent.attractions?.length) {
+      return defaultAttractions;
+    }
+
+    return remoteContent.attractions.map((item: any, index: number) => {
+      const fallback = defaultAttractions[index % defaultAttractions.length];
+      return {
+        icon: fallback.icon,
+        name: item.name || fallback.name,
+        distance: item.distance || fallback.distance,
+      };
+    });
+  }, [remoteContent.attractions]);
+
+  const handleBookRoom = (room?: any) => {
+    setSelectedRoom(room);
     setIsBookingModalOpen(true);
   };
 
@@ -201,32 +136,39 @@ export default function AwkaBranchPage() {
             { icon: MdPool, label: "Swimming Pool" },
             { icon: MdLocalParking, label: "Secure Parking" },
           ]}
-          attractions={[
-            { icon: MdChurch, name: "Ekwueme Square", distance: "5 MIN DRIVE" },
-            { icon: MdShoppingBag, name: "Eke Awka Market", distance: "8 MIN DRIVE" },
-            { icon: MdLocalActivity, name: "UNIZIK", distance: "15 MIN DRIVE" },
-            { icon: MdDirectionsCar, name: "Awka Secretariat", distance: "10 MIN DRIVE" },
-          ]}
+          attractions={attractions}
           onBookBranch={() => setIsBookingModalOpen(true)}
         />
 
-        <RoomsSection
-          rooms={rooms}
-          onBookRoom={handleBookRoom}
-          onToggleFavorite={(id) => console.log("Favorite:")}
-        />
+        {isLoading ? (
+          <VStack py={20} spacing={4}>
+            <Spinner size="lg" color="primaryRed" />
+          </VStack>
+        ) : remoteContent.rooms.length === 0 ? (
+          <VStack py={20} spacing={4}>
+            <Text color="white" fontSize="lg">No rooms available at the moment</Text>
+          </VStack>
+        ) : (
+          <RoomsSection
+            rooms={remoteContent.rooms as any}
+            onBookRoom={handleBookRoom}
+            onToggleFavorite={(id) => console.log("Favorite:")}
+          />
+        )}
       </Box>
 
       <Footer sections={footerSections} />
 
       <BookingModal
         isOpen={isBookingModalOpen}
-        onClose={() => setIsBookingModalOpen(false)}
+        onClose={() => {
+          setIsBookingModalOpen(false);
+          setSelectedRoom(null);
+        }}
         branchName="Parktonian Hotel Awka"
-        roomPrices={roomPrices}
+        selectedRoom={selectedRoom}
+        availableRooms={remoteContent.rooms}
       />
     </Box>
   );
 }
-
-export const dynamic = "force-static";

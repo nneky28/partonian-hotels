@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Box } from "@chakra-ui/react";
+import { useMemo, useState } from "react";
+import { Box, Text, Spinner, VStack } from "@chakra-ui/react";
 import { Header } from "@/components/UIs/Header";
 import { BranchHeroSlider } from "@/components/UIs/BranchHeroSlider";
 import { BranchInfoSection } from "@/components/UIs/BranchInfoSection";
@@ -9,26 +9,21 @@ import { RoomsSection } from "@/components/UIs/RoomsSection";
 import { Footer } from "@/components/UIs/footer";
 import { BookingModal } from "@/components/UIs/BookingModal";
 import {
-  MdPool,
-  MdWifi,
+
   MdLocalParking,
-  MdRestaurant,
-  MdKingBed,
-  MdVisibility,
-  MdWork,
-  MdLocalBar,
+
   MdBalcony,
-  MdBed,
   MdHome,
   MdRoomService,
   MdTheaters,
   MdShoppingBag,
   MdBeachAccess,
   MdChurch,
-  MdFreeBreakfast,
+
 } from "react-icons/md";
 import { footerSections } from "@/utils/footerSection";
 import { getResponsiveSrcSet } from "@/utils/imageUtils";
+import { useBranchContent } from "@/hooks/useBranchContent";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -37,57 +32,12 @@ const navLinks = [
   { label: "Awka", href: "/awka" },
 ];
 
-const rooms = [
-  {
-    id: "deluxe",
-    name: "Deluxe",
-    price: "₦80,000",
-    image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691576/PI_Studio_lkovqm.jpg",
-    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691576/PI_Studio_lkovqm.jpg"),
-    badge: { text: "Best Value", color: "primary" as const },
-    description:
-      "Comfortable room with modern amenities.",
-    amenities: [
-      { icon: MdKingBed, label: "King Bed" },
-      { icon: MdWifi, label: "Free WiFi" },
-      { icon: MdLocalBar, label: "Work Desk" },
-    ],
-  },
-  {
-    id: "alcove",
-    name: "Alcove",
-    price: "₦90,000",
-    image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691596/PI_Alcove_el0weu.jpg",
-    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691596/PI_Alcove_el0weu.jpg"),
-    description:
-      "Spacious alcove room with sitting area.",
-    amenities: [
-      { icon: MdKingBed, label: "King Bed" },
-      { icon: MdVisibility, label: "City View" },
-      { icon: MdWifi, label: "High-Speed WiFi" },
-    ],
-  },
-  {
-    id: "executive",
-    name: "Executive",
-    price: "₦180,000",
-    image: "https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691603/PI_Executive_Suite_f0oorc.jpg",
-    srcSet: getResponsiveSrcSet("https://res.cloudinary.com/djmwqkcw5/image/upload/v1769691603/PI_Executive_Suite_f0oorc.jpg"),
-    badge: { text: "Premium", color: "gold" as const },
-    description:
-      "Premium executive room with enhanced amenities.",
-    amenities: [
-      { icon: MdBalcony, label: "Balcony" },
-      { icon: MdFreeBreakfast, label: "Breakfast" },
-      { icon: MdRoomService, label: "Concierge" },
-    ],
-  },
+const defaultAttractions = [
+  { icon: MdTheaters, name: "Genesis Cinemas", distance: "3 MIN DRIVE" },
+  { icon: MdShoppingBag, name: "Circle Mall", distance: "5 MIN DRIVE" },
+  { icon: MdBeachAccess, name: "Elegushi Beach", distance: "17 MIN DRIVE" },
+  { icon: MdChurch, name: "The Rock Cathedral", distance: "10 MIN DRIVE" },
 ];
-
-const roomPrices = rooms.reduce((acc, room) => {
-  acc[room.name] = Number(String(room.price).replace(/[^\d]/g, ""));
-  return acc;
-}, {} as Record<string, number>);
 
 const heroSlides = [
     {
@@ -133,8 +83,26 @@ const heroSlides = [
 
 export default function IkateBranchPage() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<any>(null);
+  const { content: remoteContent, isLoading } = useBranchContent("ikate");
 
-  const handleBookRoom = () => {
+  const attractions = useMemo(() => {
+    if (!remoteContent.attractions?.length) {
+      return defaultAttractions;
+    }
+
+    return remoteContent.attractions.map((item: any, index: number) => {
+      const fallback = defaultAttractions[index % defaultAttractions.length];
+      return {
+        icon: fallback.icon,
+        name: item.name || fallback.name,
+        distance: item.distance || fallback.distance,
+      };
+    });
+  }, [remoteContent.attractions]);
+
+  const handleBookRoom = (room?: any) => {
+    setSelectedRoom(room);
     setIsBookingModalOpen(true);
   };
 
@@ -171,48 +139,40 @@ export default function IkateBranchPage() {
             { icon: MdRoomService, label: "Bespoke Service" },
             { icon: MdLocalParking, label: "Secure Parking" },
           ]}
-          attractions={[
-            {
-              icon: MdTheaters,
-              name: "Genesis Cinemas",
-              distance: "3 MIN DRIVE",
-            },
-            {
-              icon: MdShoppingBag,
-              name: "Circle Mall",
-              distance: "5 MIN DRIVE",
-            },
-            {
-              icon: MdBeachAccess,
-              name: "Elegushi Beach",
-              distance: "17 MIN DRIVE",
-            },
-            {
-              icon: MdChurch,
-              name: "The Rock Cathedral",
-              distance: "10 MIN DRIVE",
-            },
-          ]}
+          attractions={attractions}
           onBookBranch={() => setIsBookingModalOpen(true)}
         />
 
-        <RoomsSection
-          rooms={rooms}
-          onBookRoom={handleBookRoom}
-          onToggleFavorite={(id) => console.log("Favorite:", id)}
-        />
+        {isLoading ? (
+          <VStack py={20} spacing={4}>
+            <Spinner size="lg" color="primaryRed" />
+          
+          </VStack>
+        ) : remoteContent.rooms.length === 0 ? (
+          <VStack py={20} spacing={4}>
+            <Text color="white" fontSize="lg">No rooms available at the moment</Text>
+          </VStack>
+        ) : (
+          <RoomsSection
+            rooms={remoteContent.rooms as any}
+            onBookRoom={handleBookRoom}
+            onToggleFavorite={(id) => console.log("Favorite:")}
+          />
+        )}
       </Box>
 
       <Footer sections={footerSections} />
 
       <BookingModal
         isOpen={isBookingModalOpen}
-        onClose={() => setIsBookingModalOpen(false)}
+        onClose={() => {
+          setIsBookingModalOpen(false);
+          setSelectedRoom(null);
+        }}
         branchName="Parktonian Hotel Ikate"
-        roomPrices={roomPrices}
+        selectedRoom={selectedRoom}
+        availableRooms={remoteContent.rooms}
       />
     </Box>
   );
 }
-
-export const dynamic = "force-static";
