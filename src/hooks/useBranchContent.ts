@@ -11,7 +11,7 @@ const emptyContent: BranchContent = {
 };
 
 async function fetchBranchContent(branch: string): Promise<BranchContent> {
-  const response = await fetch(`/api/content/?branch=${encodeURIComponent(branch)}`, {
+  const response = await fetch(`/api/content?branch=${encodeURIComponent(branch)}`, {
     cache: "no-store",
   });
 

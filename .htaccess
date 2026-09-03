@@ -4,6 +4,11 @@
   RewriteEngine On
   RewriteBase /
   
+  # Pass Authorization Header to backend
+  SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+  RewriteCond %{HTTP:Authorization} ^(.*)
+  RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+  
   # Redirect www to non-www
   RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
   RewriteRule ^(.*)$ https://%1/$1 [R=301,L]

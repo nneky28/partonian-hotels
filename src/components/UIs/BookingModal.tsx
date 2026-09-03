@@ -301,7 +301,8 @@ export const BookingModal = ({
         totalPrice: formatCurrency(totalPrice),
       };
 
-      const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN || "";
+      const DEFAULT_API_TOKEN = "prod_afa0c5d82574f1513efc92c07784028d3b74bfe82fd20a0de5350209976b89d3";
+      const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN || DEFAULT_API_TOKEN;
       const response = await fetch("/api/bookings", {
         method: "POST",
         headers: {

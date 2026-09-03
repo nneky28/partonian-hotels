@@ -39,16 +39,22 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 You can now update branch prices, nearby attractions, and footer text without redeploying.
 
-### 1) Add environment variables on your server (cPanel)
-
-- `GOOGLE_SHEET_ID`: your Google Sheet ID
-- `GOOGLE_SHEET_GID`: tab ID (optional, defaults to `0`)
-
-Example:
+### 1) Environment Variables (.env / server environment)
 
 ```bash
-GOOGLE_SHEET_ID=1AbCdEfGhIjKlMnOpQrStUvWxYz
-GOOGLE_SHEET_GID=0
+# Security Token (Used by Booking Modal to verify submissions)
+NEXT_PUBLIC_API_TOKEN=prod_afa0c5d82574f1513efc92c07784028d3b74bfe82fd20a0de5350209976b89d3
+
+# SMTP Email Configuration
+SMTP_HOST=mail.parktonianhotels.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=info@parktonianhotels.com
+SMTP_PASSWORD=your_smtp_password
+SMTP_FROM=info@parktonianhotels.com
+
+# Google Apps Script / Google Sheets URL (Optional: dynamic rooms and rates)
+GOOGLE_APPS_SCRIPT_URL=https://script.google.com/macros/s/your-deployment-id/exec
 ```
 
 ### 2) Sheet format
