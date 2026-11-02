@@ -3,7 +3,11 @@
 import { useEffect } from "react";
 import { Box, Button, Container, Heading, Text, VStack } from "@chakra-ui/react";
 
-const menuRedirectUrl = process.env.NEXT_PUBLIC_MENU_REDIRECT_URL || "";
+const DEFAULT_MENU_REDIRECT_URL =
+  "https://drive.google.com/file/d/1-y2vMdNuNi4-jdAL6SsP1th5C5bThJ5P/view?usp=drive_link";
+
+const menuRedirectUrl =
+  process.env.NEXT_PUBLIC_MENU_REDIRECT_URL || DEFAULT_MENU_REDIRECT_URL;
 
 export default function MenuPage() {
   useEffect(() => {
